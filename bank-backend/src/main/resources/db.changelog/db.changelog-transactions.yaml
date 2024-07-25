@@ -1,0 +1,52 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: schema-lecture-be-03
+      author: news team
+      changes:
+        - createTable:
+            tableName: transactions
+            columns:
+              - column:
+                  name: transaction_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_date
+                  type: DATETIME
+              - column:
+                  name: transaction_description
+                  type: varchar(200)
+              - column:
+                  name: transaction_amount
+                  type: bigint
+              - column:
+                  name: transaction_indicator
+                  type: varchar(10)
+              - column:
+                  name: account_id_from
+                  type: bigint
+              - column:
+                  name: account_id_to
+                  type: bigint
+        - addPrimaryKey:
+            tableName: transactions
+            columnNames: transaction_id
+            constraintName: transaction_pk
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: account_id_from
+            constraintName: transaction_fk
+            referencedTableName: accounts
+            referencedColumnNames: account_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: transactions
+            baseColumnNames: account_id_to
+            constraintName: transaction_fk2
+            referencedTableName: accounts
+            referencedColumnNames: account_id
+            onDelete: CASCADE
+

@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-0.0.1
+      author: news team
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: account_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account_number
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cnic
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mobile_no
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: account_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: pin
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+        - addPrimaryKey:
+            tableName: accounts
+            columnNames: account_id
+            constraintName: account_pk
+        - addForeignKeyConstraint:
+            baseTableName: accounts
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: user_id
+            constraintName: fk_account_user_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: data-lecture-be-02
+      author: news team
+      changes:
+        - insert:
+            tableName: accounts
+            columns:
+              - column:
+                  name: account_number
+                  value: '123'
+              - column:
+                  name: description
+                  value: this is student base account
+              - column:
+                  name: cnic
+                  value: '3520291821334'
+              - column:
+                  name: mobile_no
+                  value: '0319133987'
+              - column:
+                  name: account_type
+                  value: student account
+              - column:
+                  name: balance
+                  value: '5000'
+              - column:
+                  name: pin
+                  value: '123'
+              - column:
+                  name: user_id
+                  value: '1'
+

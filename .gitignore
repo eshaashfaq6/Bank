@@ -1,0 +1,7 @@
+.idea/
+
+myapp/node_modules/
+
+bank-backend/.idea/
+
+bank-backend/target/

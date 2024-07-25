@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: schema-lecture-be-03
+      author: news team
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+              - column:
+                  name: useremail
+                  type: varchar(50)
+              - column:
+                  name: useraddress
+                  type: varchar(50)
+              - column:
+                  name: password
+                  type: varchar(200)
+              - column:
+                  name: roles
+                  type: varchar(200)
+              - column:
+                  name: created_at
+                  type: DATETIME
+        - addPrimaryKey:
+            tableName: users
+            columnNames: user_id
+            constraintName: users_pk
+  - changeSet:
+      id: data-lecture-be-02
+      author: news team
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: useremail
+                  value: admin@gmail.com
+              - column:
+                  name: useraddress
+                  value: shadbagh
+              - column:
+                  name: password
+                  value: '$2a$12$zqCoh4MlAab4GwIX9ESSTuPID94VRua8isgS8hnvCZ8w1bevleMra'
+              - column:
+                  name: roles
+                  value: admin
+              - column:
+                  name: created_at
+                  value: '2000-01-01T12:00:00'
+
