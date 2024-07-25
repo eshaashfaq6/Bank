@@ -6,12 +6,10 @@ import com.assignment.bank_backend.response.LoginResponse;
 import com.assignment.bank_backend.services.AuthenticationService;
 import com.assignment.bank_backend.services.JwtService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 

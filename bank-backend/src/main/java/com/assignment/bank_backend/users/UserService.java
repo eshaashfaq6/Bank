@@ -5,19 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
-import com.assignment.bank_backend.login.Login;
-import com.assignment.bank_backend.response.LoginResponse;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -82,28 +76,6 @@ public class UserService implements UserDetailsService {
         }
         return existing;
     }
-/*
-    public LoginResponse loginUser(Login login)    {
-        Optional<User> user1 = userRepository.findByUseremail(login.getUseremail());
-        if(user1.isPresent())
-        {
-            String password = user1.get().getPassword();
-            System.out.println(password);
-            System.out.println(login.getPassword());
-            if (password.startsWith("{noop}")) {
-                password = password.substring("{noop}".length()); // Remove {noop} prefix
-            }
-            if (login.getPassword().equals(password)) {
-                    return new LoginResponse("login success",true);
-            }
-            else {
-                return new LoginResponse("password Not match",false);
-            }
-        }
-        else {
-            return new LoginResponse("Email not exists",false);
-        }
-    }*/
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

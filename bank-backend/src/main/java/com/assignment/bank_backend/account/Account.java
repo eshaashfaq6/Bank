@@ -1,6 +1,4 @@
 package com.assignment.bank_backend.account;
-
-import com.assignment.bank_backend.users.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

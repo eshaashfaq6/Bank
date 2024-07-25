@@ -1,8 +1,6 @@
 package com.assignment.bank_backend.transaction;
 
 import com.assignment.bank_backend.account.AccountRepository;
-import com.assignment.bank_backend.login.Login;
-import com.assignment.bank_backend.response.LoginResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

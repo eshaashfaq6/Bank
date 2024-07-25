@@ -3,17 +3,13 @@ package com.assignment.bank_backend.account;
 import com.assignment.bank_backend.accountLogin.accountLogin;
 import com.assignment.bank_backend.accountUpdate.accountUpdate;
 import com.assignment.bank_backend.exception.CnicAlreadyExistsException;
-import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
-import com.assignment.bank_backend.login.Login;
 import com.assignment.bank_backend.response.AccountLoginResponse;
-import com.assignment.bank_backend.response.LoginResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin
