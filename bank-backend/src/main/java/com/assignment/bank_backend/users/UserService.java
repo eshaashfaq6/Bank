@@ -48,9 +48,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
 
     }
-    public Optional<User> findById(Long userId) {
-
-        return userRepository.findById(userId);
+    public Optional<User> findByEmail(String userEmail) {
+System.out.println(userEmail);
+        return userRepository.findByUseremail(userEmail);
     }
     public String getrole(String email) {
         Optional<User> user = userRepository.findByUseremail(email);
@@ -59,24 +59,9 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
-
-
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
-
-    public Optional<User> update(Long userId,User user) {
-        Optional<User> existing =userRepository.findById(userId);
-        if (existing.isPresent()) {
-            existing.get().setUsername(user.getUsername());
-            existing.get().setPassword(user.getPassword());
-            existing.get().setRoles(user.getRoles());
-
-            existing = Optional.of(userRepository.save(existing.get()));
-        }
-        return existing;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);

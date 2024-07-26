@@ -53,7 +53,14 @@ const ViewAccounts = () => {
         }})
       .then((res) => {
           const data = res.data;
-          setaccountdata(data);
+          if(data)
+          {
+            setaccountdata(data);
+          }
+          else{
+            setaccountdata([]);
+          }
+          
          console.log(data,data.userId);
       })
   },[])

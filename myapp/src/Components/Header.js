@@ -112,13 +112,21 @@ function Header() {
                       </a>
                     </li>
                     {usershow && (
+                      <>
                       <li className="nav-item">
                         <a className="nav-link" href="/accountlogin">
                           Transaction
                         </a>
                       </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/myprofile">
+                          My Profile
+                        </a>
+                      </li>
+                      </>
                     )}
                     {adminshow && (
+                      <>
                       <li className="nav-item dropdown main-navbar">
                         <a
                           className="nav-link dropdown-toggle"
@@ -154,8 +162,18 @@ function Header() {
                               Delete Account
                             </a>
                           </li>
+                          <li>
+                            <a className="nav-link" href="/deleteuser">
+                              Delete User
+                            </a>
+                          </li>
                         </ul>
+                      </li> <li className="nav-item">
+                        <a className="nav-link" href="/myprofile">
+                          My Profile
+                        </a>
                       </li>
+                      </>
                     )}
                   </ul>
                   {token&& <div className="right-area header-action d-flex align-items-center">

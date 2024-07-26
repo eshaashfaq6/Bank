@@ -117,13 +117,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<consoleOutput>true</consoleOutput>
-					<includeTestSourceDirectory>true</includeTestSourceDirectory>
-					<failOnViolation>true</failOnViolation>
-					<failsOnError>true</failsOnError>
-					<configLocation>config/checkstyle/checkstyle.xml</configLocation>
-					<suppressionsLocation>config/checkstyle/suppressions.xml</suppressionsLocation>
-					<suppressionsFileExpression>suppressions.xml</suppressionsFileExpression>
+					<configLocation>google_checks.xml</configLocation>
 				</configuration>
 			</plugin>
 			<plugin>

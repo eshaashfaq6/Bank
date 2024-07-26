@@ -1,50 +1,46 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import axios from "axios";
-import Cookies from 'js-cookie';
-function Deposit()
-{
-    let {accountNo}=useParams();
-    console.log("Hello",accountNo)
+function DeleteUser() {
     const navigate=useNavigate();
-    const [amount,setAmount]=useState(0);
-    const AmountChangeHandler=(event)=>
+    const [userId,setuserId]=useState("");
+    const [checkuserId,setCheckuserId]=useState(false);
+    const userIdChangeHandler=(event)=>
     {
-        setAmount(event.target.value);
+        setuserId(event.target.value);
     }
   
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("i m here");
         const token = Cookies.get('token');
-        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
+        axios.get(`http://localhost:8080/api/v1/getUserByUserId/${userId}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }})
         .then((res) => {
+            console.log("yahoo");
             const data = res.data;
             if(data)
             {
-                console.log("yahoo",data);
-                axios.post(`http://localhost:8080/api/v1/deposit`,{
-                    transactionAmount: amount,
-                    accountIdFrom: data
-                },{
+                console.log(data);
+                axios.delete(`http://localhost:8080/api/v1/deleteUserById/${userId}`,{
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }})
-                .then((res)=>{ 
-                    navigate(`/balance/${accountNo}`)
-                    console.log("hellllllo",res.data)
-                })
+                .then((res)=>{
+                    console.log("idhr")
+                    navigate('/viewuser');
+                }
+                )
             }
-           
         })
         .catch((error) => {
             if (error.response && error.response.status === 404) {
-               
+                setCheckuserId(true);
                
             }})
     };   
@@ -66,20 +62,22 @@ function Deposit()
                         <div class="form-content">
                             <div class="section-header">
                                 <h5 class="sub-title">The Power of Financial Freedom</h5>
-                                <h2 class="title">Cash Deposit</h2>
+                                <h2 class="title">Delete User! </h2>
+                                <p>Please Enter User Id to delete a user.</p>
                             </div>
                             <form action="#" onSubmit={handleSubmit}>
                                
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="single-input">
-                                            <label for="acmount">Please Enter your amount</label>
-                                            <input type="text" id="amount" min={0} placeholder="Enter Amount here" name="amount" value={amount||''} onChange={AmountChangeHandler}/>                                       
+                                            <label for="account-number">User Id</label>
+                                            <input type="text" id="userId" placeholder="Enter User Id here" name="userId" value={userId} onChange={userIdChangeHandler}/>
+                                             {checkuserId && <p className="text-danger">No such User Id found!</p>}                                        
                                         </div> 
                                     </div>
                                 </div>
                                 <div class="btn-area">
-                                    <button class="cmn-btn">Deposit</button>
+                                    <button class="cmn-btn">Delete User</button>
                                 </div>
                             </form>
                         </div>
@@ -89,5 +87,5 @@ function Deposit()
         </div>
     </section>
     </>
-)}
-export default Deposit;
+     )}
+export default DeleteUser;

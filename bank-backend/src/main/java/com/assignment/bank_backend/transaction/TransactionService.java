@@ -29,16 +29,10 @@ public class  TransactionService {
         return transactionRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 
-    public Optional<Transaction> findById(Long transactionId) {
-        return transactionRepository.findById(transactionId);
-    }
     public List<Transaction> findTransByAccountId(Long accountId) {
         List<Transaction> result=transactionRepository.findByAccountIdFrom(accountId);
         result.addAll(transactionRepository.findByAccountIdTo(accountId));
         return result;
-    }
-    public void delete(Long id) {
-        transactionRepository.deleteById(id);
     }
 
     public Optional<Transaction> update(Long transactionId,Transaction transaction) {

@@ -193,7 +193,7 @@ public class BankBackendApplicationTests {
 				.andExpect(jsonPath("$.pin", Matchers.notNullValue()))
 				.andExpect(jsonPath("$.userId",Matchers.is(1)));
 	}
-	/*@Test
+	@Test
 	public void testUpdateAccountsbyAccountnumber() throws Exception
 	{
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
@@ -209,7 +209,7 @@ public class BankBackendApplicationTests {
 
 		String responseBody = loginResult.getResponse().getContentAsString();
 		String authToken = JsonPath.read(responseBody, "$.token");
-		String accountPayload = "{\"description\":\"Updated Description\",\"useraddress\":\"new\",}";
+		String accountPayload = "{\"description\":\"Updated Description\"}";
 
 		mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/updateByAccountNo/{accountNumber}", 123)
 						.contentType(MediaType.APPLICATION_JSON)
@@ -217,8 +217,66 @@ public class BankBackendApplicationTests {
 						.header("Authorization", "Bearer " + authToken))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.description", Matchers.is("Updated Description")))
-				.andExpect(jsonPath("$.useraddress", Matchers.is("new")));
+				.andExpect(jsonPath("$.description", Matchers.is("Updated Description")));
 
-	}*/
+	}
+
+    @Test
+    public void testAccountLogin() throws Exception {
+        // Step 1: Obtain an authentication token (Assuming a login endpoint is available for obtaining a token)
+        String loginPayload = "{\"useremail\":\"esha@gmail.com\",\"password\":\"Esha@123\"}";
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(loginPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.expiresIn").isNumber())
+                .andDo(print())
+                .andReturn();
+
+        String responseBody = loginResult.getResponse().getContentAsString();
+        String authToken = JsonPath.read(responseBody, "$.token");
+
+        // Step 2: Perform the account login request
+        String accountLoginPayload = "{\"accountNo\":1234,\"pin\":1234}";
+
+        MvcResult accountLoginResult = mockMvc.perform(post("/api/v1/accountLogin")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(accountLoginPayload)
+                        .header("Authorization", "Bearer " + authToken))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", Matchers.is("Login success"))) // Adjust according to actual response
+                .andExpect(jsonPath("$.status",Matchers.is(true))) // Adjust according to actual response
+                .andReturn();
+    }
+
+    @Test
+    public void testGetBalance() throws Exception {
+        // Step 1: Obtain an authentication token (Assuming a login endpoint is available for obtaining a token)
+        String loginPayload = "{\"useremail\":\"esha@gmail.com\",\"password\":\"Esha@123\"}";
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(loginPayload))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.expiresIn").isNumber())
+                .andDo(print())
+                .andReturn();
+
+        String responseBody = loginResult.getResponse().getContentAsString();
+        String authToken = JsonPath.read(responseBody, "$.token");
+
+
+        MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 1234)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + authToken))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.is(1000))) // Replace with the expected balance
+                .andReturn();
+    }
 }
+

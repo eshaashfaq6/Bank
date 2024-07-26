@@ -112,10 +112,10 @@ function Transaction() {
                                 <img src="/images/savings.png" alt="checking"/>
                             </div>
                             <div class="content">
-                                <a href={`/changepin/${accountNo}`}><h5>Change Pin</h5></a>
+                                <a href={`/`}><h5>Back</h5></a>
                                 <p>Save for your goals and watch your money grow with a CD, a money market account, a
                                     savings account.Your future starts now.</p>
-                                <a href={`/changepin/${accountNo}`} class="btn-arrow">Change Pin
+                                <a href={`/`} class="btn-arrow">Back
                                     <img src="/images/arrow-right.png" alt="arrow"/>
                                 </a>
                             </div>

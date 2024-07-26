@@ -38,10 +38,10 @@ public class UserController {
         return role;
     }
 
-
-    @GetMapping("/api/v1/users/{userId}")
-    public ResponseEntity<User> get(@PathVariable("userId") Long userId) {
-        Optional<User> userr =userService.findById(userId);
+    @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
+    @GetMapping("/api/v1/getUserByEmail/{userEmail}")
+    public ResponseEntity<User> get(@PathVariable("userEmail") String userEmail) {
+        Optional<User> userr =userService.findByEmail(userEmail);
         if (userr.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -59,16 +59,9 @@ public class UserController {
         catch(EmailAlreadyExistsException e){
             return ResponseEntity.notFound().build();
         }}
-    @PutMapping("/api/v1/update")
-    public ResponseEntity<User> update(@PathVariable("userId") Long userId, @RequestBody User user) {
-        Optional<User> saved = userService.update(userId, user);
-        if (saved.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(saved.get());
-    }
+
     @PreAuthorize("hasAnyAuthority('admin')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/v1/deleteUserById/{id}")
     public void delete(@PathVariable("id") Long id) {
         userService.delete(id);
     }

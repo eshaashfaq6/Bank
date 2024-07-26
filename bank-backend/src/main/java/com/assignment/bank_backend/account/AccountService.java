@@ -45,17 +45,8 @@ public class AccountService {
     public Optional<Account> findByAccountNo(Long accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber);
     }
-    public Optional<Account> update(Long accountId,Account account) {
-        Optional<Account> existing =accountRepository.findById(accountId);
-        if (existing.isPresent()) {
-            existing.get().setAccountNumber(account.getAccountNumber());
-            existing.get().setDescription(account.getDescription());
-            existing.get().setCnic(account.getCnic());
-            existing.get().setMobileNo(account.getMobileNo());
-            existing.get().setAccountType(account.getAccountType());
-            existing = Optional.of(accountRepository.save(existing.get()));
-        }
-        return existing;
+    public Optional<Account> findByUserId(Long UserId) {
+        return accountRepository.findByUserId(UserId);
     }
     public Optional<Account> updateByAccountNo(Long accountNumber, accountUpdate account) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
@@ -103,9 +94,7 @@ public class AccountService {
         }
         return existing;
     }
-    public void delete(Long id) {
-        accountRepository.deleteById(id);
-    }
+
     public Optional<Account> deleteByAccountNumber(Long accountNumber) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
         if(existing.isPresent())

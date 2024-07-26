@@ -52,8 +52,13 @@ const ViewUsers = () => {
             'Authorization': `Bearer ${token}`
         }})
       .then((res) => {
-          const data = res.data;
-          setaccountdata(data);
+          const data = res.data; if(data)
+            {
+              setaccountdata(data);
+            }
+            else{
+              setaccountdata([]);
+            }
          console.log(data);
       })
   },[])

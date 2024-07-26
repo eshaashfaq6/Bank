@@ -12,7 +12,7 @@ function UpdateAccount() {
     const [accountType,setAccountType]=useState("");
     const [CNIC,setCNIC]=useState("");
     const [mobileNumber,setMobileNumber]=useState("");
-    const [balance,setBalance]=useState(0);
+    const [balance,setBalance]=useState("");
     const AccountNumberChangeHandler=(event)=>
     {
         setAccountNumber(event.target.value);
@@ -36,7 +36,6 @@ function UpdateAccount() {
     const balanceChangeHandler=(event)=>
     {
         setBalance(event.target.value);
-       
     }
     const [name,setName]=useState("");
     const [email,setEmail]=useState("");
@@ -68,7 +67,7 @@ function UpdateAccount() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("i m here",accountNo);
+        console.log("i m balance",balance);
         const token = Cookies.get('token');
         axios.patch(`http://localhost:8080/api/v1/updateByAccountNo/${accountNo}`, {
             
@@ -145,7 +144,7 @@ function UpdateAccount() {
                                     <div class="col-12">
                                     <div class="single-input">
                                             <label for="balance">Account Balance</label>
-                                            <input type="number" id="balance" min={0} placeholder="Enter Account balance here" name="balance" value={balance ||''} onChange={balanceChangeHandler}/>
+                                            <input type="text" id="balance" placeholder="Enter Account balance here" name="balance" value={balance} onChange={balanceChangeHandler}/>
                                         </div>
                                     </div>
                                     <div class="col-12">

@@ -28,16 +28,6 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/transactions/{transactionId}")
-    public ResponseEntity<Transaction> get(@PathVariable("transactionId") Long transactionId) {
-        Optional<Transaction> transactionr =transactionService.findById(transactionId);
-        if (transactionr.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(transactionr.get());
-    }
-
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
     @GetMapping("/api/v1/transactionsByAccountId/{accountId}")
     public ResponseEntity<List<Transaction>> getByAccountId(@PathVariable("accountId") Long accountId) {
         List<Transaction> transactionr =transactionService.findTransByAccountId(accountId);
@@ -47,24 +37,11 @@ public class TransactionController {
         return ResponseEntity.ok(transactionr);
     }
 
-   /* @PutMapping("/api/v1/transactions/{transactionId}")
-    public ResponseEntity<Transaction> update(@PathVariable("transactionId") Long transactionId, @RequestBody Transaction transaction) {
-        Optional<Transaction> saved = transactionService.update(transactionId, transaction);
-        if (saved.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(saved.get());
-    }*/
-    @DeleteMapping("/api/v1/transactions/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        transactionService.delete(id);
-    }
-
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
     @PostMapping("/api/v1/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody Transaction transaction) {
         transaction= transactionService.deposit(transaction);
-        return ResponseEntity.created(URI.create("/api/v1/credit/" + transaction.getTransactionId())).body(transaction);
+        return ResponseEntity.created(URI.create("/api/v1/deposit" + transaction.getTransactionId())).body(transaction);
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")

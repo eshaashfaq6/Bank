@@ -20,6 +20,8 @@ import AccountLogin from './Pages/AccountLogin';
 import Credit from './Pages/CreditPage';
 import MyTansactions from './Pages/MyTransactions';
 import ViewUsers from './Pages/AllUsers';
+import DeleteUser from './Pages/DeleteUser';
+import MyProfile from './Pages/MyProfile';
 
 const router=createBrowserRouter([
   {path:'/',
@@ -42,6 +44,7 @@ const router=createBrowserRouter([
   {path:'/debit',element:<CashWithdrawl></CashWithdrawl>},
   {path:'/debit/:accountNo',element:<CashWithdrawl></CashWithdrawl>},
   {path:'/deposit',element:<Deposit></Deposit>},
+  {path:'/deleteUser',element:<DeleteUser></DeleteUser>},
   {path:'/deposit/:accountNo',element:<Deposit></Deposit>},
   {path:'/credit',element:<Credit></Credit>},
   {path:'/credit/:accountNo',element:<Credit></Credit>},
@@ -50,6 +53,7 @@ const router=createBrowserRouter([
   {path:'/accountLogin',element:<AccountLogin></AccountLogin>},
   {path:'/viewaccount',element:<ViewAccounts></ViewAccounts>},
   {path:'/viewuser',element:<ViewUsers></ViewUsers>},
+  {path:'/myprofile',element:<MyProfile></MyProfile>},
   {path:'/mytransac/:accountNo',element:<MyTansactions></MyTansactions>}
 ],
 }

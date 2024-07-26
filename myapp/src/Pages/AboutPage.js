@@ -782,62 +782,7 @@ function AboutPage() {
         </div>
     </section>
     <section class="current-positions">
-        <div class="overlay pt-120 pb-120">
-            <div class="container wow fadeInUp">
-                <div class="row justify-content-center">
-                    <div class="col-xl-9 col-lg-10">
-                        <div class="section-header text-center">
-                            <h5 class="sub-title">Current Positions</h5>
-                            <h2 class="title">Unlock Your Career at Bankio</h2>
-                            <p>Grow with us and take your professional life to the next level.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-60">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="single-item">
-                            <p class="mdr">Management</p>
-                            <h5>Office Manager</h5>
-                            <p>Proin sed eros ac libero auctor egestas. Duis maximus imperdiet ultricies. Donec finibus diam risus</p>
-                            <a href="career-single.html" class="cmn-btn">Apply Now</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="single-item">
-                            <p class="mdr">Developer</p>
-                            <h5>Senior Backend Developer</h5>
-                            <p>Proin sed eros ac libero auctor egestas. Duis maximus imperdiet ultricies. Donec finibus diam risus</p>
-                            <a href="career-single.html" class="cmn-btn">Apply Now</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="single-item">
-                            <p class="mdr">Developer</p>
-                            <h5>Jr Frontend Developer</h5>
-                            <p>Proin sed eros ac libero auctor egestas. Duis maximus imperdiet ultricies. Donec finibus diam risus</p>
-                            <a href="career-single.html" class="cmn-btn">Apply Now</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="single-item">
-                            <p class="mdr">Design</p>
-                            <h5>UI/UX and Product Designer</h5>
-                            <p>Proin sed eros ac libero auctor egestas. Duis maximus imperdiet ultricies. Donec finibus diam risus</p>
-                            <a href="career-single.html" class="cmn-btn">Apply Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="bottom-item">
-                            <h3 class="title">Can´t find the perfect position?</h3>
-                            <p>Send us an email anyways! We will save your resume for next time a relevant position opens.We're always looking for talent</p>
-                            <a href="contact.html" class="cmn-btn">Contact Us</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
     </section>
    
     <section class="get-start wow fadeInUp">

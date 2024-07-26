@@ -48,6 +48,15 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
+    @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
+    @GetMapping("/api/v1/accountsByUserId/{UserId}")
+    public ResponseEntity<Account> getccountsByUserId(@PathVariable("UserId") Long UserId) {
+        Optional<Account> acc =accountService.findByUserId(UserId);
+        if (acc.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(acc.get());
+    }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/accounts")
     public ResponseEntity<Account> create(@RequestBody Account account) {
@@ -58,17 +67,6 @@ public class AccountController {
            return ResponseEntity.notFound().build();
        }
     }
-
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @PutMapping("/api/v1/accounts/{accountId}")
-    public ResponseEntity<Account> update(@PathVariable("accountId") Long accountId, @RequestBody Account account) {
-        Optional<Account> saved = accountService.update(accountId, account);
-        if (saved.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(saved.get());
-    }
-
     @PreAuthorize("hasAnyAuthority('admin')")
     @PatchMapping("/api/v1/updateByAccountNo/{accountNumber}")
     public ResponseEntity<Account> updateByAccountNumber(@PathVariable("accountNumber") Long accountNumber, @RequestBody accountUpdate account) {
@@ -78,13 +76,6 @@ public class AccountController {
         }
         return ResponseEntity.ok(saved.get());
     }
-
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @DeleteMapping("/api/v1/accounts/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        accountService.delete(id);
-    }
-
     @PreAuthorize("hasAnyAuthority('admin')")
     @DeleteMapping("/api/v1/deleteByAccountNo/{accountNo}")
     public ResponseEntity<Account> deleteByAccountNumber(@PathVariable("accountNo") Long accountNo) {
