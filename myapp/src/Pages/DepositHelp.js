@@ -2,21 +2,23 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from 'js-cookie';
-function Deposit()
+function DepositHelp()
 {
-    let {accountNo}=useParams();
-    console.log("Hello",accountNo)
     const navigate=useNavigate();
-    const [amount,setAmount]=useState(0);
-    const AmountChangeHandler=(event)=>
+    const [accountNo,setaccountNo]=useState(0);
+    
+    const [exists,setNotExists]=useState(false);
+    
+    const AccountNoChangeHandler=(event)=>
     {
-        setAmount(event.target.value);
+        setaccountNo(event.target.value);
     }
   
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("i m here");
         const token = Cookies.get('token');
+        
         axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
             headers: {
                 'Content-Type': 'application/json',
@@ -26,25 +28,13 @@ function Deposit()
             const data = res.data;
             if(data)
             {
-                console.log("yahoo",data);
-                axios.post(`http://localhost:8080/api/v1/deposit`,{
-                    transactionAmount: amount,
-                    accountIdFrom: data
-                },{
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }})
-                .then((res)=>{ 
-                    navigate(`/viewaccount`)
-                    console.log("hellllllo",res.data)
-                })
+                navigate(`/deposit/${accountNo}`)
             }
-           
+            
         })
         .catch((error) => {
             if (error.response && error.response.status === 404) {
-               
+                setNotExists(true)
                
             }})
     };   
@@ -73,10 +63,11 @@ function Deposit()
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="single-input">
-                                            <label for="acmount">Please Enter your amount</label>
-                                            <input type="text" id="amount" min={0} placeholder="Enter Amount here" name="amount" value={amount||''} onChange={AmountChangeHandler}/>                                       
+                                            <label for="acmount">Please Enter Account Number</label>
+                                            <input type="text" id="amount" min={0} placeholder="Enter Amount here" name="amount" value={accountNo||''} onChange={AccountNoChangeHandler}/>                                       
                                         </div> 
                                     </div>
+                                    {exists &&<p className="text-danger" >No account Number  exists</p>}
                                 </div>
                                 <div class="btn-area">
                                     <button class="cmn-btn">Deposit</button>
@@ -90,4 +81,4 @@ function Deposit()
     </section>
     </>
 )}
-export default Deposit;
+export default DepositHelp;

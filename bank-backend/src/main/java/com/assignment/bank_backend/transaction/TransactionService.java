@@ -31,7 +31,6 @@ public class  TransactionService {
 
     public List<Transaction> findTransByAccountId(Long accountId) {
         List<Transaction> result=transactionRepository.findByAccountIdFrom(accountId);
-        result.addAll(transactionRepository.findByAccountIdTo(accountId));
         return result;
     }
 
@@ -92,7 +91,9 @@ public class  TransactionService {
         Transaction trans=new Transaction();
         trans.setTransactionDate(LocalDateTime.now());
         trans.setTransactionIndicator("CR");
-        trans.setAccountIdFrom(transaction.getAccountIdFrom());
+        trans.setAccountIdFrom(transaction.getAccountIdTo());
+
+        trans.setAccountIdTo(transaction.getAccountIdFrom());
         trans.setTransactionAmount(transaction.getTransactionAmount());
         trans.setTransactionDescription("Credit Transaction");
         transactionRepository.save(trans);

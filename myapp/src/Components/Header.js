@@ -143,6 +143,11 @@ function Header() {
                             </a>
                           </li>
                           <li>
+                          <a className="nav-link" href={`/depos`}>
+                         Deposit
+                          </a>
+                        </li>
+                          <li>
                             <a className="nav-link" href="/viewuser">
                               All Users
                             </a>

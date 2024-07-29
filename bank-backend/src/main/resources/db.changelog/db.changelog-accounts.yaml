@@ -93,4 +93,66 @@ databaseChangeLog:
               - column:
                   name: user_id
                   value: '1'
+  - changeSet:
+      id: data-lecture-be-024
+      author: news team
+      changes:
+        - insert:
+            tableName: accounts
+            columns:
+              - column:
+                  name: account_number
+                  value: '111'
+              - column:
+                  name: description
+                  value: this is student base account
+              - column:
+                  name: cnic
+                  value: '352029182334'
+              - column:
+                  name: mobile_no
+                  value: '0319133987'
+              - column:
+                  name: account_type
+                  value: student account
+              - column:
+                  name: balance
+                  value: '5000'
+              - column:
+                  name: pin
+                  value: '123'
+              - column:
+                  name: user_id
+                  value: '2'
+  - changeSet:
+      id: data-lecture-be-023
+      author: news team
+      changes:
+        - insert:
+            tableName: accounts
+            columns:
+              - column:
+                  name: account_number
+                  value: '222'
+              - column:
+                  name: description
+                  value: this is student base account
+              - column:
+                  name: cnic
+                  value: '3520291821334'
+              - column:
+                  name: mobile_no
+                  value: '0319133987'
+              - column:
+                  name: account_type
+                  value: student account
+              - column:
+                  name: balance
+                  value: '5000'
+              - column:
+                  name: pin
+                  value: '123'
+              - column:
+                  name: user_id
+                  value: '3'
 

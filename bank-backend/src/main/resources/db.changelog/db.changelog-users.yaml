@@ -59,4 +59,54 @@ databaseChangeLog:
               - column:
                   name: created_at
                   value: '2000-01-01T12:00:00'
+  - changeSet:
+      id: data-lecture-be-023
+      author: news team
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: Esha
+              - column:
+                  name: useremail
+                  value: esha@gmail.com
+              - column:
+                  name: useraddress
+                  value: shadbagh
+              - column:
+                  name: password
+                  value: '$2a$12$zqCoh4MlAab4GwIX9ESSTuPID94VRua8isgS8hnvCZ8w1bevleMra'
+              - column:
+                  name: roles
+                  value: AccountHolder
+              - column:
+                  name: created_at
+                  value: '2000-01-01T12:00:00'
+  - changeSet:
+      id: data-lecture-be-024
+      author: news team
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: amna
+              - column:
+                  name: useremail
+                  value: amna@gmail.com
+              - column:
+                  name: useraddress
+                  value: shadbagh
+              - column:
+                  name: password
+                  value: '$2a$12$zqCoh4MlAab4GwIX9ESSTuPID94VRua8isgS8hnvCZ8w1bevleMra'
+              - column:
+                  name: roles
+                  value: AccountHolder
+              - column:
+                  name: created_at
+                  value: '2000-01-01T12:00:00'
 

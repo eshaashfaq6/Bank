@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -43,11 +43,130 @@ function AddAccount() {
     {
         setPin(event.target.value);
     }
+    const [accountNoTouched,setAccountNoTouched]=useState(false);
+    const [descriptionTouched,setDescriptionTouched]=useState(false);
+    const [mobileNoTouched,setMobileNoTouched]=useState(false);
+    const [pinTouched,setPinTouched]=useState(false);
+    const [cincTouched,setCnicTouched]=useState(false);
+    const [typeTouched,setTypeTouched]=useState(false);
+    const [formTouched,setformTouched]=useState(false);    
+    const [formIsValid,setFormIsValid]=useState(false);
+    const accountNoBlurHandler = () => {
+        setAccountNoTouched(true);
+    };
+    
+    const descriptionBlurHandler = () => {
+        setDescriptionTouched(true);
+    };
+    
+    const mobileNoBlurHandler = () => {
+        setMobileNoTouched(true);
+    };
+    
+    const pinBlurHandler = () => {
+        setPinTouched(true);
+    };
+    
+    const cnicBlurHandler = () => {
+        setCnicTouched(true);
+    };
+    
+    const typeBlurHandler = () => {
+        setTypeTouched(true);
+    };
+    const validateAccountNo = () => {
+        if (accountNumber === "") {
+            return "Account Number cannot be empty";
+        } else {
+            return "";
+        }
+    };
+    
+    const validateDescription = () => {
+        if (accountDescription === "") {
+            return "Description cannot be empty";
+        } else {
+            return "";
+        }
+    };
+    
+    const validateMobileNo = () => {
+        if (mobileNumber === "") {
+            return "Mobile Number cannot be empty";
+        } else if (!/^\d{11}$/.test(mobileNumber)) {
+            return "Mobile Number must be an 11 digit number";
+        } else {
+            return "";
+        }
+    };
+    
+    const validatePin = () => {
+        if (pin === "") {
+            return "PIN cannot be empty";
+        } else if (!/^\d+$/.test(pin)) {
+            return "PIN must be a number";
+        } else {
+            return "";
+        }
+    };
+    
+    const validateCnic = () => {
+        if (CNIC === "") {
+            return "CNIC cannot be empty";
+        } else if (!/^\d{13}$/.test(CNIC)) {
+            return "CNIC must be a 13 digit number";
+        } else {
+            return "";
+        }
+    };
+    
+    const validateType = () => {
+        if (accountType === "") {
+            return "Type cannot be empty";
+        } else {
+            return "";
+        }
+    };
+    const enteredAccountNoIsValid = validateAccountNo();
+    const accountNoIsInvalid = enteredAccountNoIsValid !== "" && accountNoTouched;
+    
+    const enteredDescriptionIsValid = validateDescription();
+    const descriptionIsInvalid = enteredDescriptionIsValid !== "" && descriptionTouched;
+    
+    const enteredMobileNoIsValid = validateMobileNo();
+    const mobileNoIsInvalid = enteredMobileNoIsValid !== "" && mobileNoTouched;
+    
+    const enteredPinIsValid = validatePin();
+    const pinIsInvalid = enteredPinIsValid !== "" && pinTouched;
+    
+    const enteredCnicIsValid = validateCnic();
+    const cnicIsInvalid = enteredCnicIsValid !== "" && cincTouched;
+    
+    const enteredTypeIsValid = validateType();
+    const typeIsInvalid = enteredTypeIsValid !== "" && typeTouched;
+    
+
+    useEffect(() => {
+        if (enteredAccountNoIsValid === "" &&
+            enteredDescriptionIsValid === "" &&
+            enteredMobileNoIsValid === "" &&
+            enteredPinIsValid === "" &&
+            enteredCnicIsValid === "" &&
+            enteredTypeIsValid === "") {
+            setFormIsValid(true);
+        } else {
+            setFormIsValid(false);
+        }
+    }, [enteredAccountNoIsValid, enteredDescriptionIsValid, enteredMobileNoIsValid, enteredPinIsValid, enteredCnicIsValid, enteredTypeIsValid]);
+
+    const formV = !formIsValid && formTouched;
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("i m here",userId);
+        setformTouched(true)
         const token = Cookies.get('token');
-        console.log(token)
+        if(formIsValid)
+            {
         axios.post("http://localhost:8080/api/v1/accounts", {
             accountNumber:accountNumber,
             description:accountDescription,
@@ -71,7 +190,7 @@ function AddAccount() {
         }).catch((error) => {
             if (error.response && error.response.status === 404) {
                setCnicExists(true);
-            }})
+            }})}
     };
     return (
      <> 
@@ -100,54 +219,62 @@ function AddAccount() {
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="account-number">Account Number</label>
-                                            <input type="text" id="accountNumber" placeholder="Enter Account Number here" name="accountNumber" value={accountNumber} onChange={AccountNumberChangeHandler}/>
+                                            <input type="text" id="accountNumber" placeholder="Enter Account Number here" name="accountNumber" value={accountNumber} onChange={AccountNumberChangeHandler} onBlur={accountNoBlurHandler}/>
+                                            {accountNoIsInvalid && <p className="text-danger">{enteredAccountNoIsValid}</p>}
+
                                         </div> 
                                     </div>
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="account-description">Account Description</label>
-                                            <input type="text" id="accountDescription" placeholder="Enter Account Description here" name="accountDescription" value={accountDescription} onChange={AccountDescriptionChangeHandler}/>
+                                            <input type="text" id="accountDescription" placeholder="Enter Account Description here" name="accountDescription" value={accountDescription} onChange={AccountDescriptionChangeHandler} onBlur={descriptionBlurHandler}/>
                                         </div> 
                                     </div> 
+                                    {descriptionIsInvalid && <p className="text-danger">{enteredDescriptionIsValid}</p>}
+           
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="account-CNIC">CNIC</label>
-                                            <input type="text" id="CNIC" placeholder="Enter CNIC here" name="CNIC" value={CNIC} onChange={CnicChangeHandler}/>
+                                            <input type="text" id="CNIC" placeholder="Enter CNIC here" name="CNIC" value={CNIC} onChange={CnicChangeHandler} onBlur={cnicBlurHandler}/>
                                         </div> 
-                                        
+                                        {cnicIsInvalid && <p className="text-danger">{enteredCnicIsValid}</p>}
                                         {cnicExists && <p className="text-danger">CNIC Already Exists</p>}
                                     </div>
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="mobile-number">Mobile Number</label>
-                                            <input type="text" id="mobileNumber" placeholder="Enter Mobile Number here" name="mobileNumber" value={mobileNumber} onChange={MobileNumberChangeHandler}/>
+                                            <input type="text" id="mobileNumber" placeholder="Enter Mobile Number here" name="mobileNumber" value={mobileNumber} onChange={MobileNumberChangeHandler} onBlur={mobileNoBlurHandler}/>
                                         </div> 
                                     </div>
+                                    {mobileNoIsInvalid && <p className="text-danger">{enteredMobileNoIsValid}</p>}
+            
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="account-Type">Account Type</label>
-                                            <input type="text" id="accountType" placeholder="Enter Account Type here" name="accountType" value={accountType} onChange={AccountTypeChangeHandler}/>
+                                            <input type="text" id="accountType" placeholder="Enter Account Type here" name="accountType" value={accountType} onChange={AccountTypeChangeHandler} onBlur={typeBlurHandler}/>
                                         </div> 
-                                    </div>
+                                    </div>{typeIsInvalid && <p className="text-danger">{enteredTypeIsValid}</p>}
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="balance">Balance</label>
-                                            <input type="number" min={5000} id="balance" placeholder="Enter Amount here(Minimum 5000)" name="balance" value={balance || ''} onChange={balanceChangeHandler}/>
+                                            <input type="number" min={5000} id="balance" placeholder="Enter Amount here(Minimum 5000)" name="balance" value={balance || ''} onChange={balanceChangeHandler} />
                                         </div> 
                                     </div>
                                     
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="pin">Account Pin</label>
-                                            <input type="number" id="pin" placeholder="Enter Account Pin" name="pin" value={pin || ''} onChange={pinChangeHandler}/>
+                                            <input type="number" id="pin" placeholder="Enter Account Pin" name="pin" value={pin || ''} onChange={pinChangeHandler} onBlur={pinBlurHandler}/>
                                         </div> 
                                     </div>
+                                    {pinIsInvalid && <p className="text-danger">{enteredPinIsValid}</p>}
                                     <div class="col-12">
                                         <div class="single-input">
                                             
                                         </div>
                                     </div>
-                                </div>
+                                </div>{formV && <p className="text-danger">Form is invalid. Please check the fields.</p>}
+            
                                 <div class="btn-area">
                                     <button class="cmn-btn">Submit Now</button>
                                 </div>

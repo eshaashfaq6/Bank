@@ -1,7 +1,7 @@
-import React from 'react';
-import { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
 const ViewUsers = () => {
   // Dark blue theme styles
   const containerStyle = {
@@ -43,25 +43,55 @@ const ViewUsers = () => {
   const hoverStyle = {
     backgroundColor: '#cce0ff', // Light blue
   };
-  const [accountdata,setaccountdata]=useState([]);
-  useEffect(()=>{
+
+  const [accountdata, setaccountdata] = useState([]);
+
+  useEffect(() => {
     const token = Cookies.get('token');
-      axios.get('http://localhost:8080/api/v1/getusers',{
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }})
-      .then((res) => {
-          const data = res.data; if(data)
-            {
-              setaccountdata(data);
-            }
-            else{
-              setaccountdata([]);
-            }
-         console.log(data);
-      })
-  },[])
+    axios.get('http://localhost:8080/api/v1/getusers', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then((res) => {
+      const data = res.data;
+
+      if (data) {
+        data.forEach(transaction => {
+          if (Array.isArray(transaction.createdAt)) {
+            transaction.createdAt = formatDate(transaction.createdAt);
+          } else {
+            transaction.createdAt = 'Invalid Date'; // Handle non-array or invalid formats
+          }
+        });
+        setaccountdata(data);
+      } else {
+        setaccountdata([]);
+      }
+
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
+  }, []);
+
+  const formatDate = (dateArray) => {
+    if (!Array.isArray(dateArray) || dateArray.length < 5) {
+      return 'Invalid Date';
+    }
+
+    const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date';
+    }
+
+    return date.toLocaleString(); // You can customize the format as needed
+  };
   return (
     <div>
       <br></br><br></br><br></br><br></br><br></br>

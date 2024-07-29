@@ -49,37 +49,92 @@ const MyTansactions = () => {
     backgroundColor: '#cce0ff', // Light blue
   };
   const [transactionsdata,setTransactions]=useState([]);
-  useEffect(()=>{
+  
+  useEffect(() => {
     const token = Cookies.get('token');
-    axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
-        headers: {
+  
+    axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }).then((res) => {
+      const data = res.data;
+      if (data) {
+        console.log("yahoo", data);
+        axios.get(`http://localhost:8080/api/v1/transactionsByAccountId/${data}`, {
+          headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-        }})
-        .then((res) => {
-            const data = res.data;
-            if(data)
-            {
-                console.log("yahoo",data);
-                axios.get(`http://localhost:8080/api/v1/transactionsByAccountId/${data}`,{
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }})
-                .then((res)=>{
-                    const transactionData = res.data; // Assuming res.data is an array of transactions
-      console.log("Transactions:", transactionData);
-      
-      if (Array.isArray(transactionData)) {
-        setTransactions(transactionData); // Set the array of transactions
-      }
-
+          }
+        }).then((res) => {
+          const transactionData = res.data; // Assuming res.data is an array of transactions
+          console.log("Transactions:", transactionData);
+  
+          const promises = transactionData.map((transaction, i) => {
+            const promises = [];
+  
+            if (transaction.accountIdFrom != null) {
+              const accountIdFrom = transaction.accountIdFrom;
+              promises.push(
+                axios.get(`http://localhost:8080/api/v1/getAccountNo/${accountIdFrom}`, {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+                }).then((res) => {
+                  transactionData[i].accountIdFrom = res.data;
+                  console.log("its1", res.data);
                 })
+              );
             }
-           
-        })
-     
-  },[])
+  
+            if (transaction.accountIdTo != null) {
+              const accountIdTo = transaction.accountIdTo;
+              promises.push(
+                axios.get(`http://localhost:8080/api/v1/getAccountNo/${accountIdTo}`, {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                  }
+                }).then((res) => {
+                  transactionData[i].accountIdTo = res.data;
+                  console.log("its2", res.data);
+                })
+              );
+            }
+  
+            return Promise.all(promises);
+          });
+  
+          Promise.all(promises).then(() => {
+            if (Array.isArray(transactionData)) {
+              transactionData.forEach(transaction => {
+                transaction.transactionDate = formatDate(transaction.transactionDate);
+            });
+              setTransactions(transactionData); // Set the array of transactions
+            }
+          });
+        }).catch((error) => {
+          if (error.response && error.response.status === 404) {
+            console.log("No transactions found for the account.");
+            setTransactions([]); // Set to an empty array if no transactions are found
+          }})
+      }
+    }).catch((error) => {
+      if (error.response && error.response.status === 404) {
+        console.log("No transactions found for the account.");
+        setTransactions([]); // Set to an empty array if no transactions are found
+      }
+    });
+  }, []);
+  
+  const formatDate = (dateArray) => {
+    const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    return date.toLocaleString(); // You can customize the format as needed
+};         
+      
   return (
     <div>
       <br></br><br></br><br></br><br></br><br></br>

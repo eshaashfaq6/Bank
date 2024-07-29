@@ -31,7 +31,7 @@ function UserLoginPage() {
                 Cookies.set('token', res.data.token, { expires: 7 });
                 const decoded = jwtDecode(res.data.token);
                 console.log("Plz",decoded);
-                navigate("/")
+                navigate("/myprofile")
             }
         })
         .catch((error) => { if (error.response && error.response.status === 403) {

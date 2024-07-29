@@ -22,6 +22,7 @@ import MyTansactions from './Pages/MyTransactions';
 import ViewUsers from './Pages/AllUsers';
 import DeleteUser from './Pages/DeleteUser';
 import MyProfile from './Pages/MyProfile';
+import DepositHelp from './Pages/DepositHelp';
 
 const router=createBrowserRouter([
   {path:'/',
@@ -54,7 +55,9 @@ const router=createBrowserRouter([
   {path:'/viewaccount',element:<ViewAccounts></ViewAccounts>},
   {path:'/viewuser',element:<ViewUsers></ViewUsers>},
   {path:'/myprofile',element:<MyProfile></MyProfile>},
-  {path:'/mytransac/:accountNo',element:<MyTansactions></MyTansactions>}
+  {path:'/mytransac/:accountNo',element:<MyTansactions></MyTansactions>},
+  
+  {path:'/depos',element:<DepositHelp></DepositHelp>}
 ],
 }
 

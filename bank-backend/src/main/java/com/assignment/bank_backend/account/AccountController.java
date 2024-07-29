@@ -57,6 +57,12 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
+    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @GetMapping("/api/v1/getAccountNo/{accountId}")
+    public Long getaccountNo(@PathVariable("accountId") Long accountId) {
+        Long No =accountService.findAccountNo(accountId);
+        return No;
+    }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/accounts")
     public ResponseEntity<Account> create(@RequestBody Account account) {
@@ -85,7 +91,7 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @PreAuthorize("hasAnyAuthority('AccountHolder','admin')")
     @GetMapping("/api/v1/getAccountId/{accountNumber}")
     public ResponseEntity<?> getAccountId(@PathVariable("accountNumber") Long accountNumber) {
         Optional<Account> acc =accountService.findByAccountNo(accountNumber);

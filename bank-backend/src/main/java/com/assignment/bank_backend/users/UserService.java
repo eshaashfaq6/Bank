@@ -48,8 +48,11 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
 
     }
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+
     public Optional<User> findByEmail(String userEmail) {
-System.out.println(userEmail);
         return userRepository.findByUseremail(userEmail);
     }
     public String getrole(String email) {

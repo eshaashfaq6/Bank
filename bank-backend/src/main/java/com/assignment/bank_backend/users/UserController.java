@@ -47,7 +47,15 @@ public class UserController {
         }
         return ResponseEntity.ok(userr.get());
     }
-
+    @PreAuthorize("hasAnyAuthority('admin')")
+    @GetMapping("/api/v1/getUserByUserId/{userId}")
+    public ResponseEntity<User> get(@PathVariable("userId") Long userId) {
+        Optional<User> user =userService.findById(userId);
+        if (user.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user.get());
+    }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/users")
     public ResponseEntity<User> create(@RequestBody User user) {

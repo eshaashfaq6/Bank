@@ -37,7 +37,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionr);
     }
 
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody Transaction transaction) {
         transaction= transactionService.deposit(transaction);

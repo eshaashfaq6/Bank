@@ -94,7 +94,10 @@ public class AccountService {
         }
         return existing;
     }
-
+    public Long findAccountNo(Long accountId) {
+        Optional<Account> acc=accountRepository.findByAccountId(accountId);
+        return acc.get().getAccountNumber();
+    }
     public Optional<Account> deleteByAccountNumber(Long accountNumber) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
         if(existing.isPresent())
