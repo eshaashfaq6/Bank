@@ -10,6 +10,8 @@ Scenario('Login with valid credentials', ({ I }) => {
     I.click('Login');
     // Ensure you are redirected to the /viewaccount page
     I.waitForNavigation({ waitUntil: 'networkidle0' });
-    I.seeInCurrentUrl('/viewaccount');
-    I.see('Accounts'); // Assuming there's text indicating successful navigation
+    I.seeInCurrentUrl('/myprofile');
+    I.see('My Profile'); // Assuming there's text indicating successful navigation
+    I.click('Manage User'); // Update selector as needed
+
 });
