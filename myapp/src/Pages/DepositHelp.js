@@ -64,13 +64,13 @@ function DepositHelp()
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="acmount">Please Enter Account Number</label>
-                                            <input type="text" id="amount" min={0} placeholder="Enter Amount here" name="amount" value={accountNo||''} onChange={AccountNoChangeHandler}/>                                       
+                                            <input type="text" id="accountNo" min={0} placeholder="Enter Account No here" name="accountNo" value={accountNo||''} onChange={AccountNoChangeHandler}/>                                       
                                         </div> 
                                     </div>
                                     {exists &&<p className="text-danger" >No account Number  exists</p>}
                                 </div>
                                 <div class="btn-area">
-                                    <button class="cmn-btn">Deposit</button>
+                                    <button class="cmn-btn">Check</button>
                                 </div>
                             </form>
                         </div>

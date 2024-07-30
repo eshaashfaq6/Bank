@@ -20,7 +20,7 @@ public class TransactionController {
         this.accountRepository = accountRepository;
     }
 
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/api/v1/transactions")
     public ResponseEntity<List<Transaction>> get (@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "1000") Integer size) {

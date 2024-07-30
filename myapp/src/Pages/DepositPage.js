@@ -36,7 +36,7 @@ function Deposit()
                         'Authorization': `Bearer ${token}`
                     }})
                 .then((res)=>{ 
-                    navigate(`/viewaccount`)
+                    navigate(`/alltransac`)
                     console.log("hellllllo",res.data)
                 })
             }

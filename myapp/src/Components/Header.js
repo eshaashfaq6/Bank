@@ -173,7 +173,14 @@ function Header() {
                             </a>
                           </li>
                         </ul>
-                      </li> <li className="nav-item">
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/alltransac">
+                          All Transactions
+                        </a>
+                      </li>
+                      
+                       <li className="nav-item">
                         <a className="nav-link" href="/myprofile">
                           My Profile
                         </a>

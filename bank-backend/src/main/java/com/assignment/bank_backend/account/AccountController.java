@@ -57,7 +57,7 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @PreAuthorize("hasAnyAuthority('AccountHolder','admin')")
     @GetMapping("/api/v1/getAccountNo/{accountId}")
     public Long getaccountNo(@PathVariable("accountId") Long accountId) {
         Long No =accountService.findAccountNo(accountId);
