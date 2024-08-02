@@ -14,11 +14,15 @@ function Credit()
     const AmountChangeHandler=(event)=>
     {
         setAmount(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setAmount(sanitizedValue);
     }
   
     const recieverAccountNoChangeHandler=(event)=>
         {
             setRecieverAmountNo(event.target.value);
+            const sanitizedValue =event.target.value.replace(/\D/g, '');
+            setRecieverAmountNo(sanitizedValue);
         }
       
     const handleSubmit = (event) => {

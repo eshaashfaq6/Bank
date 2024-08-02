@@ -76,7 +76,6 @@ Scenario('AdminLogin And Deposit', ({ I }) => {
     
     I.click('Login');
     // Ensure you are redirected to the /viewaccount page
-    I.waitForNavigation({ waitUntil: 'networkidle0' });
     I.seeInCurrentUrl('/myprofile');
     I.see('My Profile'); // Assuming there's text indicating successful navigation
     I.click('Manage User'); // Update selector as needed
@@ -90,7 +89,7 @@ Scenario('AdminLogin And Deposit', ({ I }) => {
     
     I.fillField({ id: 'amount' }, '5000');
     I.click('//button[text()="Deposit"]');
-    I.seeInCurrentUrl('http://localhost:3000/viewaccount');
+    I.seeInCurrentUrl('http://localhost:3000/alltransac');
 });
 Scenario('AdminLogin And Delete User', ({ I }) => {
     I.amOnPage('http://localhost:3000/adminlogin'); // Update the URL if different
@@ -106,12 +105,13 @@ Scenario('AdminLogin And Delete User', ({ I }) => {
     I.seeInCurrentUrl('/myprofile');
     I.see('My Profile'); // Assuming there's text indicating successful navigation
     I.click('Manage User'); // Update selector as needed
-    I.click('Delete User'); // Update selector as needed
-    I.amOnPage('http://localhost:3000/deleteUser');
+    I.click('Delete Account'); // Update selector as needed
+    I.amOnPage('http://localhost:3000/deleteaccount');
     // Fill in user details
-    I.fillField({ id: 'userId' }, '4');
+    I.fillField({ id: 'accountNumber' }, '1234567890');
     // Submit the form
-    I.click('//button[text()="Delete User"]');
-    I.seeInCurrentUrl('http://localhost:3000/viewuser');
-    I.dontSee('Test');
+    I.click('//button[text()="Delete Account"]');
+    I.seeInCurrentUrl('http://localhost:3000/viewaccount');
+   
+
 });

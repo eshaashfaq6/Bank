@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.assignment.bank_backend.account.AccountRepository;
 import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -17,11 +18,12 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
+    private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountRepository=accountRepository;
 
     }
 
@@ -44,7 +46,7 @@ public class UserService implements UserDetailsService {
         user.setCreatedAt(LocalDateTime.now());
         user.setRoles("AccountHolder");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println(user.getuname());
+
         return userRepository.save(user);
 
     }
@@ -59,6 +61,14 @@ public class UserService implements UserDetailsService {
         Optional<User> user = userRepository.findByUseremail(email);
         if (user.isPresent()) {
             return user.get().getRoles();
+        }
+        return null;
+    }
+
+    public Long getUserID(String email) {
+        Optional<User> user = userRepository.findByUseremail(email);
+        if (user.isPresent()) {
+            return user.get().getUserId();
         }
         return null;
     }

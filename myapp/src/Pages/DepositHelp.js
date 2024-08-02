@@ -12,6 +12,8 @@ function DepositHelp()
     const AccountNoChangeHandler=(event)=>
     {
         setaccountNo(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setaccountNo(sanitizedValue);
     }
   
     const handleSubmit = (event) => {

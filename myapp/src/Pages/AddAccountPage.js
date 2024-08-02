@@ -18,6 +18,8 @@ function AddAccount() {
     const AccountNumberChangeHandler=(event)=>
     {
         setAccountNumber(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setAccountNumber(sanitizedValue);
     }
     const AccountTypeChangeHandler=(event)=>
     {
@@ -30,14 +32,20 @@ function AddAccount() {
     const CnicChangeHandler=(event)=>
     {
         setCNIC(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setCNIC(sanitizedValue);
     } 
     const MobileNumberChangeHandler=(event)=>
     {
         setMobileNumber(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setMobileNumber(sanitizedValue);
     }
     const balanceChangeHandler=(event)=>
     {
         setBalance(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setBalance(sanitizedValue);
     }
     const pinChangeHandler=(event)=>
     {
@@ -61,6 +69,7 @@ function AddAccount() {
     
     const mobileNoBlurHandler = () => {
         setMobileNoTouched(true);
+        
     };
     
     const pinBlurHandler = () => {
@@ -77,7 +86,11 @@ function AddAccount() {
     const validateAccountNo = () => {
         if (accountNumber === "") {
             return "Account Number cannot be empty";
-        } else {
+        } 
+        else if (!/^\d{10}$/.test(accountNumber)) {
+            return "Account Number must be an 10 digit number";
+        }
+        else {
             return "";
         }
     };
@@ -175,7 +188,8 @@ function AddAccount() {
             accountType:accountType,
             balance:balance,
             pin:pin,
-            userId:userId
+            userId:userId,
+            status:"active"
         },{
             headers: {
                 'Content-Type': 'application/json',

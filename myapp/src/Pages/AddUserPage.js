@@ -178,7 +178,7 @@ function AddUser() {
         <button id="btn-rtl" class="cmn-btn rounded-2 py-2 px-3">RTL</button>
     </div>
     
-    <div class="preloader" id="preloader"></div>
+    {/* <div class="preloader" id="preloader"></div> */}
     
     <a href="javascript:void(0)" class="scrollToTop"><i class="fas fa-angle-double-up"></i></a>
     <section class="sign-in-up register">

@@ -26,11 +26,12 @@ function DeleteAccount() {
             if(data)
             {
                 console.log(data);
-                axios.delete(`http://localhost:8080/api/v1/deleteByAccountNo/${accountNumber}`,{
+                axios.post(`http://localhost:8080/api/v1/setstatus/${accountNumber}`,{},{
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }})
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  })
                 .then((res)=>{
                     console.log("idhr")
                     navigate('/viewaccount');

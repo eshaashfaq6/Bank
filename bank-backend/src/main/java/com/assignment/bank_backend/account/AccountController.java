@@ -83,9 +83,9 @@ public class AccountController {
         return ResponseEntity.ok(saved.get());
     }
     @PreAuthorize("hasAnyAuthority('admin')")
-    @DeleteMapping("/api/v1/deleteByAccountNo/{accountNo}")
-    public ResponseEntity<Account> deleteByAccountNumber(@PathVariable("accountNo") Long accountNo) {
-        Optional<Account> acc=accountService.deleteByAccountNumber(accountNo);
+    @PostMapping("/api/v1/setstatus/{accountNo}")
+    public ResponseEntity<Account> setStatus(@PathVariable("accountNo") Long accountNo) {
+        Optional<Account> acc=accountService.setStatus(accountNo);
         if (acc.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -104,7 +104,7 @@ public class AccountController {
     @GetMapping("/api/v1/getBalance/{accountNo}")
     public Long getbalance(@PathVariable("accountNo") Long accountNo) {
         Long balance=accountService.getBalance(accountNo);
-        System.out.println(balance);
+
         return balance;
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")

@@ -25,8 +25,8 @@ function HomePage() {
                                     <p class="xlr">Products and services designed to help you reach your financial goals.</p>
                                 </div>
                                 <div class="bottom-area">
-                                    <a href="register.html" class="cmn-btn">Open Account</a>
-                                    <a href="contact.html" class="cmn-btn second">Get in touch</a>
+                                    <a href="/adminlogin" class="cmn-btn">Open Account</a>
+                                    <a href="/contact" class="cmn-btn second">Get in touch</a>
                                 </div>
                             </div>
                         </div>

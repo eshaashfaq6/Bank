@@ -1,23 +1,26 @@
 spring:
   application:
     name: bank-backend
-  h2:
-    console:
-      enabled: true
   datasource:
-    url: jdbc:h2:mem:bankdb
-    username: test
-    password: password122
+    url: ${dbUrl}
+    username: ${dbUser}
+    password: ${dbPassword}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: none
-    open-in-view: false
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQLDialect
+
   liquibase:
     change-log: classpath:/db.changelog/db.changelog-master.yaml
     enabled: true
+
 
 security:
   jwt:
     secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
     expiration-time: 3600000  # 1 hour in milliseconds
+
 

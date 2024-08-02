@@ -1,5 +1,6 @@
 package com.assignment.bank_backend.configs;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebSecurity
 @Configuration
 @EnableWebMvc
+@EnableAdminServer
 public class SecurityConfiguration {
 
     // @Value("${security.ignored}")
@@ -34,7 +36,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/api/v1/login","/api/v1/getaccounts","/api/v1/getrole/", "/swagger-ui/**", " /v3/api-docs", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health","/applications","/api/v1/login","/api/v1/getaccounts","/api/v1/getrole/", "/swagger-ui/**", " /v3/api-docs", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

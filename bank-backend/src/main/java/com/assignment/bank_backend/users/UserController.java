@@ -1,5 +1,6 @@
 package com.assignment.bank_backend.users;
 
+import com.assignment.bank_backend.exception.AuthenticationException;
 import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
 import com.assignment.bank_backend.login.Login;
 import com.assignment.bank_backend.response.LoginResponse;
@@ -36,6 +37,12 @@ public class UserController {
     public String getrole (@PathVariable("email") String email) {
         String role=userService.getrole(email);
         return role;
+    }
+@PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @GetMapping("/api/v1/getuserId/{email}")
+    public Long getUserId (@PathVariable("email") String email) {
+        Long userid=userService.getUserID(email);
+        return userid;
     }
 
     @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
@@ -76,13 +83,16 @@ public class UserController {
 
     @PostMapping("/api/v1/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody Login login) {
-        User authenticatedUser = authenticationService.authenticate(login);
+          try{ User authenticatedUser = authenticationService.authenticate(login);
 
-        String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setToken(jwtToken);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
+           String jwtToken = jwtService.generateToken(authenticatedUser);
+           LoginResponse loginResponse = new LoginResponse();
+           loginResponse.setToken(jwtToken);
+           loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok(loginResponse);}catch (AuthenticationException e){
+            return ResponseEntity.notFound().build();
+
+        }
     }
 }

@@ -9,6 +9,8 @@ function UpdateAccountHelp() {
     const AccountNumberChangeHandler=(event)=>
     {
         setAccountNumber(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setAccountNumber(sanitizedValue);
     }
   
     const handleSubmit = (event) => {

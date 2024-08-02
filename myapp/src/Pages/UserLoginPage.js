@@ -7,7 +7,7 @@ function UserLoginPage() {
     const navigate=useNavigate();
     const [email,setEmail]=useState("");
     const [password,setPasssword]=useState("");
-
+    const [active,setActive]=useState(false);
     const [credentialsInvalid,setCredentialsInvalid]=useState(false);
     const emailChangeHandler=(event)=>
     {
@@ -34,8 +34,13 @@ function UserLoginPage() {
                 navigate("/myprofile")
             }
         })
-        .catch((error) => { if (error.response && error.response.status === 403) {
-            console.error("Authentication failed: Invalid credentials");}
+        .catch((error) => { 
+            if (error.response && error.response.status === 403) {
+            console.error("Authentication failed: Invalid credentials");
+            }
+            if (error.response && error.response.status === 404) {
+              setActive(true);
+             }
           setCredentialsInvalid(true);
         });
     };   
@@ -79,10 +84,9 @@ function UserLoginPage() {
                                                 <img class="showPass" src="loginImages/show-hide.png" alt="icon"/>
                                                
                                             </div>
-                                            <div class="forgot-area text-end">
-                                                <a href="javascript:void(0)" class="forgot-password">Forgot Password?</a>
-                                            </div>
+                                           
                                             {credentialsInvalid&&<p className="text-danger">Invalid credentials</p>}
+                                            {active&&<p className="text-danger">Not Active User </p>}
                                         </div>
                                     </div>
                                 </div>

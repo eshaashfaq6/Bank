@@ -34,7 +34,7 @@ function Transaction() {
                     <div class="col-lg-4 col-md-6">
                         <div class="single-box text-center">
                             <div class="thumb d-flex justify-content-center align-items-center">
-                                <img src="/images/business.png" alt="checking"/>
+                                <img src="/images/savings.png" alt="checking"/>
                             </div>
                             <div class="content"> <a href={`/credit/${accountNo}`}><h5>Credit/Transfer</h5></a>
                                 <p>Click the link below to Transfer money to another account easily from your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
@@ -47,7 +47,7 @@ function Transaction() {
                     <div class="col-lg-4 col-md-6">
                         <div class="single-box text-center">
                             <div class="thumb d-flex justify-content-center align-items-center">
-                                <img src="/images/business.png" alt="checking"/>
+                                <img src="/images/checking.png" alt="checking"/>
                             </div>
                             <div class="content">
                             <a href={`/balance/${accountNo}`}><h5>Balance Enquiry</h5></a>
@@ -69,38 +69,40 @@ function Transaction() {
                         </div>
                     </div>
                 </div>
-                <div class="row cus-mar">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-box text-center">
-                            <div class="thumb d-flex justify-content-center align-items-center">
-                                <img src="/images/checking.png" alt="checking"/>
-                            </div>
-                            <div class="content">
-                            <a href={`/mytransac/${accountNo}`}><h5>My Transactions</h5></a>
-                                <p>Click the link below to see all transacions of your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                                <a href={`/mytransac/${accountNo}`} class="btn-arrow">My transactions
-                                    <img src="/images/arrow-right.png" alt="arrow"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                   
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-box text-center">
-                            <div class="thumb d-flex justify-content-center align-items-center">
-                                <img src="/images/savings.png" alt="checking"/>
-                            </div>
-                            <div class="content">
-                                <a href={`/`}><h5>Back</h5></a>
-                                <p>Click the link below to go back.Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                                <a href={`/`} class="btn-arrow">Back
-                                    <img src="/images/arrow-right.png" alt="arrow"/>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                  
+                <div class="container">
+    <div class="row cus-mar justify-content-center">
+        <div class="col-lg-4 col-md-6">
+            <div class="single-box text-center">
+                <div class="thumb d-flex justify-content-center align-items-center">
+                    <img src="/images/business.png" alt="checking"/>
                 </div>
+                <div class="content">
+                    <a href={`/mytransac/${accountNo}`}><h5>My Transactions</h5></a>
+                    <p>Click the link below to see all transactions of your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
+                    <a href={`/mytransac/${accountNo}`} class="btn-arrow">My transactions
+                        <img src="/images/arrow-right.png" alt="arrow"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="single-box text-center">
+                <div class="thumb d-flex justify-content-center align-items-center">
+                    <img src="/images/back.png" alt="checking"/>
+                </div>
+                <div class="content">
+                    <a href={`/`}><h5>Back</h5></a>
+                    <p>Click the link below to go back. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
+                    <a href={`/`} class="btn-arrow">Back
+                        <img src="/images/arrow-right.png" alt="arrow"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
             </div>
         </div>
         

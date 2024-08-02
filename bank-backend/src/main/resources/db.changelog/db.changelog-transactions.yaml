@@ -1,4 +1,3 @@
-
 databaseChangeLog:
   - changeSet:
       id: schema-lecture-be-03
@@ -12,6 +11,7 @@ databaseChangeLog:
                   type: bigint
                   autoIncrement: true
                   constraints:
+                    primaryKey: true
                     nullable: false
               - column:
                   name: transaction_date
@@ -31,22 +31,15 @@ databaseChangeLog:
               - column:
                   name: account_id_to
                   type: bigint
-        - addPrimaryKey:
-            tableName: transactions
-            columnNames: transaction_id
-            constraintName: transaction_pk
         - addForeignKeyConstraint:
             baseTableName: transactions
             baseColumnNames: account_id_from
-            constraintName: transaction_fk
+            constraintName: fk_transactions_account_from
             referencedTableName: accounts
             referencedColumnNames: account_id
-            onDelete: CASCADE
         - addForeignKeyConstraint:
             baseTableName: transactions
             baseColumnNames: account_id_to
-            constraintName: transaction_fk2
+            constraintName: fk_transactions_account_to
             referencedTableName: accounts
             referencedColumnNames: account_id
-            onDelete: CASCADE
-

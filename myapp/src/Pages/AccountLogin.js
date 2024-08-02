@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
 
 import Cookies from 'js-cookie';
@@ -7,7 +8,7 @@ function AccountLogin() {
     const navigate=useNavigate();
     const [accountNo,setAccountNo]=useState(0);
     const [pin,setPin]=useState(0);
-
+    const[invalidcredentials,setinvalidcredentials]=useState(false);
     const [accountInvalid,setAccountInvalid]=useState("");
     const [pinInvalid,setPinInvalid]=useState("");
     const accountNoChangeHandler=(event)=>
@@ -22,38 +23,65 @@ function AccountLogin() {
         event.preventDefault();
         console.log("i m here");        
         const token = Cookies.get('token');
-        let user=axios.post("http://localhost:8080/api/v1/accountLogin", {
-            accountNo:accountNo,
-            pin:pin
-        },{
+        const decoded = jwtDecode(token);
+        axios.get(`http://localhost:8080/api/v1/getuserId/${decoded.sub}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
-            }})
-        .then((res) => {
-            console.log(user);
-            const data = res.data;
-            console.log(data)
-            if (data.message === "Account No not exists")
-            {
-                setAccountInvalid(true);
-            } 
+            }
+            
+        }).then((res)=>{
+            console.log("evaluation",res.data)
+            axios.get(`http://localhost:8080/api/v1/accountsByUserId/${res.data}`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then((res)=>{
+                if(res.data.accountNumber==accountNo)
+                {
+                    let user=axios.post("http://localhost:8080/api/v1/accountLogin", {
+                        accountNo:accountNo,
+                        pin:pin
+                    },{
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }})
+                    .then((res) => {
+                        console.log(user);
+                        const data = res.data;
+                        console.log(data)
+                        if (data.message === "Account No not exists")
+                        {
+                            setAccountInvalid(true);
+                        } 
+            
+                        else if (data.message === "Login success") 
+                        {
+            
+                            navigate(`/transaction/${accountNo}`)
+                        } 
+                        else if (data.message === "Pin Not match") 
+                        {
+                            
+                            setAccountInvalid(false);
+                            setPinInvalid(true);
+                        } 
+                    })
+                    .catch((error) => {
+                        console.error("Error during login:", error);
+                    });
+                }
+                else{
+                    setinvalidcredentials(true);
+                }
+            })
 
-            else if (data.message === "Login success") 
-            {
-
-                navigate(`/transaction/${accountNo}`)
-            } 
-            else if (data.message === "Pin Not match") 
-            {
-                
-                setAccountInvalid(false);
-                setPinInvalid(true);
-            } 
-        })
-        .catch((error) => {
-            console.error("Error during login:", error);
-        });
+            
+        }
+        )
+        
     };   
     return (
      <>    
@@ -95,10 +123,9 @@ function AccountLogin() {
                                                 <img class="showPass" src="loginImages/show-hide.png" alt="icon"/>
                                                
                                             </div>
-                                            <div class="forgot-area text-end">
-                                                <a href="javascript:void(0)" class="forgot-password">Forgot Password?</a>
-                                            </div>
+                                            
                                             {pinInvalid&&<p className="text-danger">Pin not Matched.</p>}
+                                            {invalidcredentials &&<p className="text-danger">Invalid Credentials!!</p>}
                                         </div>
                                     </div>
                                 </div>

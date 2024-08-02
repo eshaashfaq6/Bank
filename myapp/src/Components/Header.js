@@ -65,7 +65,7 @@ function Header() {
           <div className="container">
             <div className="row d-flex header-area">
               <nav className="navbar navbar-expand-lg navbar-light">
-                <a className="navbar-brand" href="index.html">
+                <a className="navbar-brand" href="/">
                   <img src="/images/logo.png" className="logo" alt="logo" />
                 </a>
                 <button
@@ -137,21 +137,7 @@ function Header() {
                           Manage User
                         </a>
                         <ul className="dropdown-menu main-menu shadow">
-                          <li>
-                            <a className="nav-link" href="/viewaccount">
-                              All Accounts
-                            </a>
-                          </li>
-                          <li>
-                          <a className="nav-link" href={`/depos`}>
-                         Deposit
-                          </a>
-                        </li>
-                          <li>
-                            <a className="nav-link" href="/viewuser">
-                              All Users
-                            </a>
-                          </li>
+                         
                           <li>
                             <a className="nav-link" href="/adduser">
                               Add Account
@@ -167,19 +153,29 @@ function Header() {
                               Delete Account
                             </a>
                           </li>
-                          <li>
-                            <a className="nav-link" href="/deleteuser">
-                              Delete User
-                            </a>
-                          </li>
+                        
                         </ul>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/viewaccount">
+                        All Accounts
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="/viewuser">
+                        All Users
+                        </a>
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" href="/alltransac">
                           All Transactions
                         </a>
                       </li>
-                      
+                      <li className="nav-item">
+                        <a className="nav-link" href="/depos">
+                        Deposit
+                        </a>
+                      </li>
                        <li className="nav-item">
                         <a className="nav-link" href="/myprofile">
                           My Profile
@@ -199,7 +195,7 @@ function Header() {
           </div>
         </div>
       </header>
-    </>
+         </>
   );
 }
 

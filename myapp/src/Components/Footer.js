@@ -68,8 +68,9 @@ function Footer()
                 <div class="col-12">
                     <div class="footer-bottom">
                         <div class="left">
-                            <p> Copyright © <a href="index.html">Bankio</a> | Designed by
-                                <a href="https://themeforest.net/user/pixelaxis">PIXELAXIS</a>
+                            <p> Copyright © <a href="index.html">Bankio</a> 
+                            
+                            
                             </p>
                         </div>
                         <div class="right">

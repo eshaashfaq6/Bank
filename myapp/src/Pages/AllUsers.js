@@ -131,6 +131,25 @@ const ViewUsers = () => {
             ))}
           </tbody>
         </table>
+        <br></br>
+        <a 
+                   href={`/adduser`} 
+                    style={{
+                      display: 'inline-block',
+                      backgroundColor: '#007bff',
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '4px',
+                      textDecoration: 'none',
+                      textAlign: 'center',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+                  >
+                    + Add User
+                  </a><br></br><br></br>
       </div>
     </div>
   );

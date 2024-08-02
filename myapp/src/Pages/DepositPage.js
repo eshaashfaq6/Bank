@@ -11,6 +11,8 @@ function Deposit()
     const AmountChangeHandler=(event)=>
     {
         setAmount(event.target.value);
+        const sanitizedValue =event.target.value.replace(/\D/g, '');
+        setAmount(sanitizedValue);
     }
   
     const handleSubmit = (event) => {

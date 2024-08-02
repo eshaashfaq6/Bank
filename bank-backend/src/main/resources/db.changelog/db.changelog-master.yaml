@@ -6,10 +6,6 @@ databaseChangeLog:
       file: db.changelog-accounts.yaml
       relativeToChangelogFile: true
   - include:
-      file: db.changelog-balances.yaml
-      relativeToChangelogFile: true
-
-  - include:
       file: db.changelog-transactions.yaml
       relativeToChangelogFile: true
 

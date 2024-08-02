@@ -20,10 +20,10 @@ import AccountLogin from './Pages/AccountLogin';
 import Credit from './Pages/CreditPage';
 import MyTansactions from './Pages/MyTransactions';
 import ViewUsers from './Pages/AllUsers';
-import DeleteUser from './Pages/DeleteUser';
 import MyProfile from './Pages/MyProfile';
 import DepositHelp from './Pages/DepositHelp';
 import AllTansactions from './Pages/AllTransactions';
+import Protected from './Components/Protected';
 
 const router=createBrowserRouter([
   {path:'/',
@@ -32,33 +32,31 @@ const router=createBrowserRouter([
   [{path:'/',element:<HomePage></HomePage>},
   {path:'/adminlogin',element:<AdminLoginPage></AdminLoginPage>},
   {path:'/userlogin',element:<UserLoginPage></UserLoginPage>},
-  {path:'/adduser',element:<AddUser></AddUser>},
+  {path:'/adduser',element:<Protected Component={AddUser} allowedRoles={'admin'}/>},
   {path:'/about',element:<AboutPage></AboutPage>},
   {path:'/contact',element:<ContactUsPage></ContactUsPage>},
-  {path:'/addaccount',element:<AddAccount></AddAccount>},
-  {path:'/addaccount/:userId',element:<AddAccount></AddAccount>},
-  {path:'/updateaccounthelp',element:<UpdateAccountHelp></UpdateAccountHelp>},
-  {path:'/updateaccount',element:<UpdateAccount></UpdateAccount>},
-  {path:'/updateaccount/:accountNo',element:<UpdateAccount></UpdateAccount>},
-  {path:'/deleteaccount',element:<DeleteAccount></DeleteAccount>},
-  {path:'/transaction',element:<Transaction></Transaction>},
-  {path:'/transaction/:accountNo',element:<Transaction></Transaction>},
-  {path:'/debit',element:<CashWithdrawl></CashWithdrawl>},
-  {path:'/debit/:accountNo',element:<CashWithdrawl></CashWithdrawl>},
-  {path:'/deposit',element:<Deposit></Deposit>},
-  {path:'/deleteUser',element:<DeleteUser></DeleteUser>},
-  {path:'/deposit/:accountNo',element:<Deposit></Deposit>},
-  {path:'/credit',element:<Credit></Credit>},
-  {path:'/credit/:accountNo',element:<Credit></Credit>},
-  {path:'/balance',element:<Balance></Balance>},
-  {path:'/balance/:accountNo',element:<Balance></Balance>},
-  {path:'/accountLogin',element:<AccountLogin></AccountLogin>},
-  {path:'/viewaccount',element:<ViewAccounts></ViewAccounts>},
-  {path:'/viewuser',element:<ViewUsers></ViewUsers>},
+ 
+  {path:'/addaccount/:userId',element:<Protected Component={AddAccount} allowedRoles={'admin'}/>},
+  {path:'/updateaccounthelp',element:<Protected Component={UpdateAccountHelp} allowedRoles={'admin'}/>},
+  {path:'/updateaccount/:accountNo',element:<Protected Component={UpdateAccount} allowedRoles={'admin'}/>},
+  {path:'/deleteaccount',element:<Protected Component={DeleteAccount} allowedRoles={'admin'}/>},
+  {path:'/depos',element:<Protected Component={DepositHelp} allowedRoles={'admin'}/>},
+  {path:'/alltransac',element:<Protected Component={AllTansactions} allowedRoles={'admin'}/>},
+  {path:'/viewaccount',element:<Protected Component={ViewAccounts} allowedRoles={'admin'}/>},
+  {path:'/viewuser',element:<Protected Component={ViewUsers} allowedRoles={'admin'}/>},
+  {path:'/deposit/:accountNo',element:<Protected Component={Deposit} allowedRoles={'admin'}/>},
+
+
+
+  {path:'/transaction/:accountNo',element:<Protected Component={Transaction} allowedRoles={'AccountHolder'}/>},
+  {path:'/debit/:accountNo',element:<Protected Component={CashWithdrawl} allowedRoles={'AccountHolder'}/>},
+  {path:'/credit/:accountNo',element:<Protected Component={Credit} allowedRoles={'AccountHolder'}/>},
+  {path:'/balance/:accountNo',element:<Protected Component={Balance} allowedRoles={'AccountHolder'}/>},
+  {path:'/accountLogin',element:<Protected Component={AccountLogin} allowedRoles={'AccountHolder'}/>},
   {path:'/myprofile',element:<MyProfile></MyProfile>},
-  {path:'/mytransac/:accountNo',element:<MyTansactions></MyTansactions>},
-  {path:'/alltransac',element:<AllTansactions></AllTansactions>},
-  {path:'/depos',element:<DepositHelp></DepositHelp>}
+  {path:'/mytransac/:accountNo',element:<Protected Component={MyTansactions} allowedRoles={'AccountHolder'}/>},
+  
+  
 ],
 }
 

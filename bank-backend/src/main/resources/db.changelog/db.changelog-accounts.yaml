@@ -11,6 +11,7 @@ databaseChangeLog:
                   type: bigint
                   autoIncrement: true
                   constraints:
+                    primaryKey: true
                     nullable: false
               - column:
                   name: account_number
@@ -48,19 +49,19 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: bigint
-        - addPrimaryKey:
-            tableName: accounts
-            columnNames: account_id
-            constraintName: account_pk
         - addForeignKeyConstraint:
             baseTableName: accounts
             baseColumnNames: user_id
             referencedTableName: users
             referencedColumnNames: user_id
             constraintName: fk_account_user_id
-            onDelete: CASCADE
 
   - changeSet:
       id: data-lecture-be-02
@@ -71,28 +72,32 @@ databaseChangeLog:
             columns:
               - column:
                   name: account_number
-                  value: '123'
+                  value: 123
               - column:
                   name: description
                   value: this is student base account
               - column:
                   name: cnic
-                  value: '3520291821334'
+                  value: 3520291821334
               - column:
                   name: mobile_no
-                  value: '0319133987'
+                  value: 319133987
               - column:
                   name: account_type
                   value: student account
               - column:
                   name: balance
-                  value: '5000'
+                  value: 5000
               - column:
                   name: pin
-                  value: '123'
+                  value: 123
+              - column:
+                  name: status
+                  value: active
               - column:
                   name: user_id
-                  value: '1'
+                  value: 1
+
   - changeSet:
       id: data-lecture-be-024
       author: news team
@@ -102,28 +107,32 @@ databaseChangeLog:
             columns:
               - column:
                   name: account_number
-                  value: '111'
+                  value: 111
               - column:
                   name: description
                   value: this is student base account
               - column:
                   name: cnic
-                  value: '352029182334'
+                  value: 352029182334
               - column:
                   name: mobile_no
-                  value: '0319133987'
+                  value: 319133987
               - column:
                   name: account_type
                   value: student account
               - column:
                   name: balance
-                  value: '5000'
+                  value: 5000
               - column:
                   name: pin
-                  value: '123'
+                  value: 123
+              - column:
+                  name: status
+                  value: active
               - column:
                   name: user_id
-                  value: '2'
+                  value: 2
+
   - changeSet:
       id: data-lecture-be-023
       author: news team
@@ -133,26 +142,28 @@ databaseChangeLog:
             columns:
               - column:
                   name: account_number
-                  value: '222'
+                  value: 222
               - column:
                   name: description
                   value: this is student base account
               - column:
                   name: cnic
-                  value: '3520291821334'
+                  value: 3520291821334
               - column:
                   name: mobile_no
-                  value: '0319133987'
+                  value: 319133987
               - column:
                   name: account_type
                   value: student account
               - column:
                   name: balance
-                  value: '5000'
+                  value: 5000
               - column:
                   name: pin
-                  value: '123'
+                  value: 123
+              - column:
+                  name: status
+                  value: active
               - column:
                   name: user_id
-                  value: '3'
-
+                  value: 3

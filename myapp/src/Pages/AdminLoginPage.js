@@ -79,9 +79,7 @@ function AdminLoginPage() {
                                                 <img class="showPass" src="loginImages/show-hide.png" alt="icon"/>
                                                
                                             </div>
-                                            <div class="forgot-area text-end">
-                                                <a href="javascript:void(0)" class="forgot-password">Forgot Password?</a>
-                                            </div>
+                                            
                                             {credentialsInvalid&&<p className="text-danger">Invalid credentials</p>}
                                         </div>
                                     </div>

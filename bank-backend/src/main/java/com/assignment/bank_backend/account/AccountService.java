@@ -98,11 +98,12 @@ public class AccountService {
         Optional<Account> acc=accountRepository.findByAccountId(accountId);
         return acc.get().getAccountNumber();
     }
-    public Optional<Account> deleteByAccountNumber(Long accountNumber) {
+    public Optional<Account> setStatus(Long accountNumber) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
         if(existing.isPresent())
         {
-            accountRepository.delete(existing.get());
+            existing.get().setStatus("Inactive");
+            accountRepository.save(existing.get());
         }
         return existing;
     }

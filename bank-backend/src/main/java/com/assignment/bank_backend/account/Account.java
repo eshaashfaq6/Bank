@@ -17,4 +17,5 @@ public class Account {
     private Long balance;
     private Long pin;
     private Long userId;
+    private String status;
 }

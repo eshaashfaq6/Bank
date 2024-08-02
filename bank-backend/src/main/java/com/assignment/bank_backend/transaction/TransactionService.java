@@ -52,7 +52,6 @@ public class  TransactionService {
         Long accId=transaction.getAccountIdFrom();
         Account account=accountRepository.findById(accId).get();
         Long balance=account.getBalance();
-        System.out.println(balance);
         account.setBalance(balance+transaction.getTransactionAmount());
         accountRepository.save(account);
         return transactionRepository.save(transaction);
@@ -65,7 +64,6 @@ public class  TransactionService {
         Long accId=transaction.getAccountIdFrom();
         Account account=accountRepository.findById(accId).get();
         Long balance=account.getBalance();
-        System.out.println(balance);
         if(balance<transaction.getTransactionAmount()) {
             return "Insufficient balance";
         }
