@@ -131,7 +131,8 @@ const MyTansactions = () => {
   
   const formatDate = (dateArray) => {
     const [year, month, day, hour, minute, second, nanosecond] = dateArray;
-    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    console.log(hour);
+    const date = new Date(year, month - 1, day, hour, minute, second);
     return date.toLocaleString(); // You can customize the format as needed
 };         
       
@@ -170,8 +171,17 @@ const MyTansactions = () => {
                 <td style={cellStyle}>{transactions.transactionDescription}</td>
                 <td style={cellStyle}>{transactions.transactionAmount}</td>
                 <td style={cellStyle}>{transactions.transactionIndicator}</td>
-                <td style={cellStyle}>{transactions.accountIdFrom}</td>
-                <td style={cellStyle}>{transactions.accountIdTo}</td>
+                {transactions.transactionIndicator === "CR" ? (
+                    <>
+                      <td style={cellStyle}>{transactions.accountIdTo}</td>
+                      <td style={cellStyle}></td> {/* Empty cell for Account From */}
+                    </>
+                  ) : (
+                    <>
+                      <td style={cellStyle}>{transactions.accountIdFrom}</td>
+                      <td style={cellStyle}>{transactions.accountIdTo}</td>
+                    </>
+                  )}
               </tr>
             ))}
           </tbody>

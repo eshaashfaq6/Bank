@@ -83,7 +83,7 @@ const ViewUsers = () => {
     }
 
     const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
-    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    const date = new Date(year, month - 1, day, hour, minute, second);
     
     // Check if the date is valid
     if (isNaN(date.getTime())) {

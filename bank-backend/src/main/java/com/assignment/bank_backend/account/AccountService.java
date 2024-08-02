@@ -1,7 +1,8 @@
 package com.assignment.bank_backend.account;
 
-import com.assignment.bank_backend.accountLogin.accountLogin;
-import com.assignment.bank_backend.accountUpdate.accountUpdate;
+import com.assignment.bank_backend.accountLogin.AccountLogin;
+import com.assignment.bank_backend.accountUpdate.AccountUpdate;
+import com.assignment.bank_backend.exception.AccountNumberAlreadyExistsException;
 import com.assignment.bank_backend.exception.CnicAlreadyExistsException;
 import com.assignment.bank_backend.response.AccountLoginResponse;
 import com.assignment.bank_backend.users.User;
@@ -37,6 +38,11 @@ public class AccountService {
         if (accountRepository.existsByCnic(account.getCnic())) {
             throw new CnicAlreadyExistsException("Cnic already exists: " + account.getCnic());
         }
+        if(accountRepository.existsByaccountNumber(account.getAccountNumber()))
+        {
+            throw new AccountNumberAlreadyExistsException("AccountNumber already exists: " + account.getCnic());
+
+        }
         return accountRepository.save(account);
     }
     public Optional<Account> findById(Long accountId) {
@@ -48,7 +54,7 @@ public class AccountService {
     public Optional<Account> findByUserId(Long UserId) {
         return accountRepository.findByUserId(UserId);
     }
-    public Optional<Account> updateByAccountNo(Long accountNumber, accountUpdate account) {
+    public Optional<Account> updateByAccountNo(Long accountNumber, AccountUpdate account) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
         if (existing.isPresent()) {
             Long userId = existing.get().getUserId();
@@ -76,6 +82,9 @@ public class AccountService {
             }
             if (account.getDescription() != null && !account.getDescription().isEmpty()) {
                 existing.get().setDescription(account.getDescription());
+            }
+            if (account.getStatus() != null && !account.getStatus().isEmpty()) {
+                existing.get().setStatus(account.getStatus());
             }
             if (account.getCnic() != null) {
                 existing.get().setCnic(account.getCnic());
@@ -111,7 +120,7 @@ public class AccountService {
         Long accountId = accountRepository.findByAccountNumber(accountNo).get().getAccountId();
         return accountRepository.findById(accountId).get().getBalance();
     }
-    public AccountLoginResponse loginAccount(accountLogin accountLogin)    {
+    public AccountLoginResponse loginAccount(AccountLogin accountLogin)    {
         Optional<Account> acc= accountRepository.findByAccountNumber(accountLogin.getAccountNo());
 
         if(acc.isPresent())

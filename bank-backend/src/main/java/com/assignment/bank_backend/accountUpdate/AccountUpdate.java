@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class accountUpdate {
+public class AccountUpdate {
     private Long accountId;
     private Long accountNumber;
     private String description;
@@ -13,6 +13,7 @@ public class accountUpdate {
     private Long mobileNo;
     private String accountType;
     private Long balance;
+    private String status;
     private Long userId;
     private String username;
     private String useremail;

@@ -111,7 +111,7 @@ const AllTansactions = () => {
   
   const formatDate = (dateArray) => {
     const [year, month, day, hour, minute, second, nanosecond] = dateArray;
-    const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    const date = new Date(year, month - 1, day, hour, minute, second);
     return date.toLocaleString(); // You can customize the format as needed
 };         
       

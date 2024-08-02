@@ -14,6 +14,7 @@ function UpdateAccount() {
     const [CNIC, setCNIC] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
     const [balance, setBalance] = useState("");
+    const [accountStatus, setAccountStatus] = useState("");
 
     // Additional state
     const [name, setName] = useState("");
@@ -55,7 +56,7 @@ function UpdateAccount() {
         // Validate fields
         validateCnic(CNIC);
         validateMobileNo(mobileNumber);
-validateAccountNumber(accountNumber)
+        validateAccountNumber(accountNumber)
         if (!cnicIsInvalid && !mobileNoIsInvalid && !accountNumberIsInvalid) {
             const token = Cookies.get('token');
             axios.patch(`http://localhost:8080/api/v1/updateByAccountNo/${accountNo}`, {
@@ -65,6 +66,7 @@ validateAccountNumber(accountNumber)
                 mobileNo: mobileNumber,
                 balance,
                 accountType,
+                status:accountStatus,
                 useremail: email,
                 username: name,
                 useraddress: address,
@@ -163,6 +165,12 @@ validateAccountNumber(accountNumber)
                                             <div class="single-input">
                                                 <label for="account-Type">Account Type</label>
                                                 <input type="text" id="accountType" placeholder="Enter Account Type here" name="accountType" value={accountType} onChange={(e) => setAccountType(e.target.value)} />
+                                            </div> 
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="single-input">
+                                                <label for="account-Status">Account Status</label>
+                                                <input type="text" id="accountStatus" placeholder="Enter Account Status here" name="accountStatus" value={accountStatus} onChange={(e) => setAccountStatus(e.target.value)} />
                                             </div> 
                                         </div>
                                     </div>

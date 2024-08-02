@@ -1,15 +1,19 @@
 package com.assignment.bank_backend.account;
 
-import com.assignment.bank_backend.accountLogin.accountLogin;
-import com.assignment.bank_backend.accountUpdate.accountUpdate;
+import com.assignment.bank_backend.accountLogin.AccountLogin;
+import com.assignment.bank_backend.accountUpdate.AccountUpdate;
+import com.assignment.bank_backend.exception.AccountNumberAlreadyExistsException;
 import com.assignment.bank_backend.exception.CnicAlreadyExistsException;
 import com.assignment.bank_backend.response.AccountLoginResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin
@@ -19,7 +23,8 @@ public class AccountController {
     private final AccountService accountService;
     public AccountController(AccountService accountService)
     {
-        this.accountService = accountService;
+
+        this.accountService = Objects.requireNonNull(accountService,"Account Service must not be null");
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
@@ -65,17 +70,20 @@ public class AccountController {
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/accounts")
-    public ResponseEntity<Account> create(@RequestBody Account account) {
-       try {
-           account = accountService.create(account);
-           return ResponseEntity.created(URI.create("/api/v1/Accounts/" + account.getAccountId())).body(account);
-       } catch(CnicAlreadyExistsException e){
-           return ResponseEntity.notFound().build();
-       }
+    public ResponseEntity<?> create(@RequestBody Account account) {
+        try {
+            account = accountService.create(account);
+            return ResponseEntity.created(URI.create("/api/v1/Accounts/" + account.getAccountId())).body(account);
+        } catch (CnicAlreadyExistsException e) {
+            return ResponseEntity.notFound().build();
+        } catch (AccountNumberAlreadyExistsException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PatchMapping("/api/v1/updateByAccountNo/{accountNumber}")
-    public ResponseEntity<Account> updateByAccountNumber(@PathVariable("accountNumber") Long accountNumber, @RequestBody accountUpdate account) {
+    public ResponseEntity<Account> updateByAccountNumber(@PathVariable("accountNumber") Long accountNumber, @RequestBody AccountUpdate account) {
         Optional<Account> saved = accountService.updateByAccountNo(accountNumber, account);
         if (saved.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -109,7 +117,7 @@ public class AccountController {
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
       @PostMapping("/api/v1/accountLogin")
-      public ResponseEntity<AccountLoginResponse> accountLogin(@RequestBody accountLogin account) {
+      public ResponseEntity<AccountLoginResponse> accountLogin(@RequestBody AccountLogin account) {
       AccountLoginResponse res =accountService.loginAccount(account);
       return ResponseEntity.ok(res);
 

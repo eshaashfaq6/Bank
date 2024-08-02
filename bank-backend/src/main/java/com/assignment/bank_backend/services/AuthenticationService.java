@@ -55,10 +55,15 @@ private final AccountRepository accountRepository;
         User user=userRepository.findByUseremail(input.getUseremail())
                 .orElseThrow();
         Long id=user.getUserId();
-       Optional<Account> acc=accountRepository.findByUserId(id);
+        Optional<Account> acc=accountRepository.findByUserId(id);
+        if(acc.isEmpty()){
+            return user;
+        }
+
         if (!"active".equalsIgnoreCase(acc.get().getStatus())) {
             throw new AuthenticationException("User account is not active");
         }
+
         return user;
     }
 }

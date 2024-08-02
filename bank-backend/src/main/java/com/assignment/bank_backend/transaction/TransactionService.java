@@ -2,7 +2,6 @@ package com.assignment.bank_backend.transaction;
 
 import com.assignment.bank_backend.account.Account;
 import com.assignment.bank_backend.account.AccountRepository;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,14 +18,9 @@ public class  TransactionService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Transaction> findAll(Integer page, Integer size) {
-        if (page < 0) {
-            page = 0;
-        }
-        if (size > 1000) {
-            size = 1000;
-        }
-        return transactionRepository.findAll(PageRequest.of(page, size)).getContent();
+    public List<Transaction> findAll() {
+
+        return transactionRepository.findAlltransac();
     }
 
     public List<Transaction> findTransByAccountId(Long accountId) {

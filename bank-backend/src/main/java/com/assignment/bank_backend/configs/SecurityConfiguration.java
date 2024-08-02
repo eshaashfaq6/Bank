@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.Objects;
+
 
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -21,14 +23,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAdminServer
 public class SecurityConfiguration {
 
-    // @Value("${security.ignored}")
-    private String[] ignored;
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     public SecurityConfiguration( JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationProvider authenticationProvider ) {
         this.authenticationProvider = authenticationProvider;
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.jwtAuthenticationFilter =  Objects.requireNonNull(jwtAuthenticationFilter,"Account Service must not be null");
     }
 
     @Bean
@@ -47,22 +47,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-//
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//
-//        configuration.setAllowedOrigins(List.of("*"));
-//        configuration.setAllowedMethods(List.of("*"));
-//        configuration.setAllowedHeaders(List.of("*"));
-//        configuration.setAllowCredentials(true);
-//
-//        configuration.addAllowedHeader("*");
-//        configuration.addExposedHeader("Authorization");
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
 }

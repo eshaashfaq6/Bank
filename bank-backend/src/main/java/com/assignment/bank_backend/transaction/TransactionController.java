@@ -21,9 +21,8 @@ public class TransactionController {
 
     @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/api/v1/transactions")
-    public ResponseEntity<List<Transaction>> get (@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                           @RequestParam(name = "size", defaultValue = "1000") Integer size) {
-        return ResponseEntity.ok(transactionService.findAll(page,size));
+    public ResponseEntity<List<Transaction>> get () {
+        return ResponseEntity.ok(transactionService.findAll());
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")

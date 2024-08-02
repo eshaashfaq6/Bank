@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin
@@ -25,7 +26,7 @@ public class UserController {
     {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
-        this.userService = userService;
+        this.userService = Objects.requireNonNull(userService,"Account Service must not be null");
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/api/v1/getusers")
@@ -74,12 +75,6 @@ public class UserController {
         catch(EmailAlreadyExistsException e){
             return ResponseEntity.notFound().build();
         }}
-
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @DeleteMapping("/api/v1/deleteUserById/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        userService.delete(id);
-    }
 
     @PostMapping("/api/v1/login")
     public ResponseEntity<LoginResponse> authenticate(@RequestBody Login login) {

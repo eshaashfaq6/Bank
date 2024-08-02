@@ -8,6 +8,7 @@ function AddAccount() {
     const { userId } = useParams();
     const navigate=useNavigate();
     const [cnicExists,setCnicExists]=useState(false);
+    const [AccNoExists,setAccNoExists]=useState(false);
     const [accountNumber,setAccountNumber]=useState("");
     const [accountDescription,setAccountDescription]=useState("");
     const [accountType,setAccountType]=useState("");
@@ -141,7 +142,7 @@ function AddAccount() {
         }
     };
     const enteredAccountNoIsValid = validateAccountNo();
-    const accountNoIsInvalid = enteredAccountNoIsValid !== "" && accountNoTouched;
+    const accountNoIsInvalid = enteredAccountNoIsValid !== "" && accountNoTouched ;
     
     const enteredDescriptionIsValid = validateDescription();
     const descriptionIsInvalid = enteredDescriptionIsValid !== "" && descriptionTouched;
@@ -153,7 +154,7 @@ function AddAccount() {
     const pinIsInvalid = enteredPinIsValid !== "" && pinTouched;
     
     const enteredCnicIsValid = validateCnic();
-    const cnicIsInvalid = enteredCnicIsValid !== "" && cincTouched;
+    const cnicIsInvalid = enteredCnicIsValid !== "" && cincTouched ;
     
     const enteredTypeIsValid = validateType();
     const typeIsInvalid = enteredTypeIsValid !== "" && typeTouched;
@@ -204,7 +205,11 @@ function AddAccount() {
         }).catch((error) => {
             if (error.response && error.response.status === 404) {
                setCnicExists(true);
-            }})}
+            }
+        else if(error.response && error.response.status === 409)
+        {
+            setAccNoExists(true);
+        }})}
     };
     return (
      <> 
@@ -235,6 +240,7 @@ function AddAccount() {
                                             <label for="account-number">Account Number</label>
                                             <input type="text" id="accountNumber" placeholder="Enter Account Number here" name="accountNumber" value={accountNumber} onChange={AccountNumberChangeHandler} onBlur={accountNoBlurHandler}/>
                                             {accountNoIsInvalid && <p className="text-danger">{enteredAccountNoIsValid}</p>}
+                                            {AccNoExists && <p className="text-danger">Account Number Already Exists</p>}
 
                                         </div> 
                                     </div>
