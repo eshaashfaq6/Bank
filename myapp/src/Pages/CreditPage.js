@@ -5,12 +5,14 @@ import Cookies from 'js-cookie';
 function Credit()
 {
     let {accountNo}=useParams();
-    console.log("Hello",accountNo)
     const navigate=useNavigate();
     const [amount,setAmount]=useState(0);    
     const [recieverAccountNo,setRecieverAmountNo]=useState(0);    
     const [checkRecieverAccountNo,setcheckRecieverAmountNo]=useState(false);
     const [checkBalance,setBalanceCheck]=useState(false);
+     const [transferToSelf, setTransferToSelf] = useState(false);
+     
+     const [status, setstatus] = useState(false);
     const AmountChangeHandler=(event)=>
     {
         setAmount(event.target.value);
@@ -23,12 +25,19 @@ function Credit()
             setRecieverAmountNo(event.target.value);
             const sanitizedValue =event.target.value.replace(/\D/g, '');
             setRecieverAmountNo(sanitizedValue);
+        
         }
       
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("i m here");
         const token = Cookies.get('token');
+        if (recieverAccountNo === accountNo) {
+            setcheckRecieverAmountNo(false);
+            setstatus(false);
+            setTransferToSelf(true);
+            return; 
+        }
+
         axios.get(`http://localhost:8080/api/v1/getAccountId/${recieverAccountNo}`,{
             headers: {
                 'Content-Type': 'application/json',
@@ -38,41 +47,56 @@ function Credit()
             const recieverId = res.data;
             if(recieverId)
             {
-                axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
+                axios.get(`http://localhost:8080/api/v1/getstatus/${recieverAccountNo}`,{
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
-                    }})
-                .then((res)=>{
-                axios.post(`http://localhost:8080/api/v1/credit`,{
-                    transactionAmount: amount,
-                    accountIdFrom:res.data,
-                    accountIdTo: recieverId,
-
-                },{
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }})
-                .then((res)=>{
-                    if(res.data=="Transaction Success")
-                    {
-                        setcheckRecieverAmountNo(false)
-                        setBalanceCheck(false)
-                        navigate(`/balance/${accountNo}`)
-                    }
-                    else if(res.data=="Insufficient balance")
-                    {
-                        setcheckRecieverAmountNo(false)
-                        setBalanceCheck(true)
-                    }
-                })})
+                    }}).then((res)=>{
+                        if(res.data=="active"){
+                        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            }})
+                        .then((res)=>{
+                        axios.post(`http://localhost:8080/api/v1/credit`,{
+                            transactionAmount: amount,
+                            accountIdFrom:res.data,
+                            accountIdTo: recieverId,
+        
+                        },{
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            }})
+                        .then((res)=>{
+                            if(res.data=="Transaction Success")
+                            {
+                                setcheckRecieverAmountNo(false)
+                                setBalanceCheck(false)
+                                navigate(`/balance/${accountNo}`)
+                            }
+                            else if(res.data=="Insufficient balance")
+                            {
+                                setcheckRecieverAmountNo(false)
+                                setBalanceCheck(true)
+                            }
+                        })})}
+                        else{
+                            setstatus(true);
+                            setcheckRecieverAmountNo(false);
+                            setTransferToSelf(false);
+                        }
+                    })
+             
             }
            
         })
         .catch((error) => {
             if (error.response && error.response.status === 404) {
                 setcheckRecieverAmountNo(true);
+                setstatus(false);
+                setTransferToSelf(false);
                
             }})
     };   
@@ -102,7 +126,7 @@ function Credit()
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="acmount">Please Enter your amount</label>
-                                            <input type="number" id="amount" min={0} placeholder="Enter Amount here" name="amount" value={amount||''} onChange={AmountChangeHandler}/>                                       
+                                            <input type="number" id="amount" min={500} placeholder="Enter Amount here" name="amount" value={amount||''} onChange={AmountChangeHandler}/>                                       
                                         </div> 
                                         { checkBalance && <p className="text-danger">In sufficient Balance</p>}
                                         <div class="single-input">
@@ -110,6 +134,8 @@ function Credit()
                                             <input type="number" id="recieverAccountNo"  placeholder="Enter recieverAccountNo here" name="recieverAccountNo" value={recieverAccountNo||''} onChange={recieverAccountNoChangeHandler}/>                                       
                                         </div> 
                                         {checkRecieverAccountNo &&<p className="text-danger">No such account exists</p>}
+                                        {transferToSelf && <p className="text-danger">You cannot transfer money to your own account</p>} {/* Error for self-transfer */}
+                                           {status && <p className="text-danger">Reciever account is inactive</p>}
                                     </div>
                                 </div>
                                 <div class="btn-area">

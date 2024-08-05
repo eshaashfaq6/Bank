@@ -5,23 +5,20 @@ import Cookies from 'js-cookie';
 function Balance()
 {
     let {accountNo}=useParams();
-    console.log("helloo",accountNo);
     const navigate=useNavigate();
     const [balance,setBalance]=useState("");
     useEffect(()=>
     {
         const token = Cookies.get('token');
-        axios.get(`http://localhost:8080/api/v1/getBalance/${accountNo}`,{
+        axios.get(`http://localhost:8080/api/v1/getBalance`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }})
         .then((res) => {
-            console.log("yup");
             const data = res.data;
             if(data)
             {
-                console.log("Yaa",data);
                 setBalance(data);
             }
            

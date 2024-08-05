@@ -150,8 +150,18 @@ const AllTansactions = () => {
                 <td style={cellStyle}>{transactions.transactionDescription}</td>
                 <td style={cellStyle}>{transactions.transactionAmount}</td>
                 <td style={cellStyle}>{transactions.transactionIndicator}</td>
-                <td style={cellStyle}>{transactions.accountIdFrom}</td>
-                <td style={cellStyle}>{transactions.accountIdTo}</td>
+                {transactions.transactionIndicator === "CR" ? (
+                    <>
+                      <td style={cellStyle}>{transactions.accountIdTo}</td>
+                      <td style={cellStyle}>{transactions.accountIdFrom}</td>
+                      <td style={cellStyle}></td> {/* Empty cell for Account From */}
+                    </>
+                  ) : (
+                    <>
+                      <td style={cellStyle}>{transactions.accountIdFrom}</td>
+                      <td style={cellStyle}>{transactions.accountIdTo}</td>
+                    </>
+                  )}
               </tr>
             ))}
           </tbody>

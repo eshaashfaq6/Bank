@@ -120,6 +120,10 @@ public class AccountService {
         Long accountId = accountRepository.findByAccountNumber(accountNo).get().getAccountId();
         return accountRepository.findById(accountId).get().getBalance();
     }
+    public String getstatus(Long accountNo) {
+        String status = accountRepository.findByAccountNumber(accountNo).get().getStatus();
+        return status;
+    }
     public AccountLoginResponse loginAccount(AccountLogin accountLogin)    {
         Optional<Account> acc= accountRepository.findByAccountNumber(accountLogin.getAccountNo());
 

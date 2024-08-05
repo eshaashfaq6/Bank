@@ -249,7 +249,7 @@ public class BankBackendApplicationTests {
         String authToken = JsonPath.read(responseBody, "$.token");
 
 
-        MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 1234)
+        MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + authToken))
                 .andDo(print())
@@ -304,37 +304,8 @@ public class BankBackendApplicationTests {
 
 		String responseBody = result.getResponse().getContentAsString();
 		String authToken = JsonPath.read(responseBody, "$.token");
-
-		// Create a user
-		String userPayload = "{\"username\":\"UserTest\",\"useremail\":\"UserTest@gmail.com\",\"useraddress\":\"shadbagh\",\"password\":\"UserTest@123\"}";
-		mockMvc.perform(post("/api/v1/users")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(userPayload)
-						.header("Authorization", "Bearer " + authToken))
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isCreated())  // Change to 201 if that is what your API should return
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.useremail", Matchers.is("UserTest@gmail.com")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.useraddress", Matchers.is("shadbagh")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()));
-		String accountPayload = "{\"accountNumber\":12345,\"description\":\"Savings Account\",\"cnic\":1234561234561,\"mobileNo\":12345678123,\"accountType\":\"Savings\",\"balance\":1000,\"pin\":12345,\"userId\":4,\"status\":\"active\"}";
-		mockMvc.perform(post("/api/v1/accounts")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(accountPayload)
-						.header("Authorization", "Bearer " + authToken))
-				.andDo(print())
-				.andExpect(status().isCreated())  // Change to 201 if that is what your API should return
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.accountId", Matchers.is(4)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber", Matchers.is(12345)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("Savings Account")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.accountType", Matchers.is("Savings")))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.balance", Matchers.is(1000)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.pin", Matchers.is(12345)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is(4)));
-
 		// User login to get role
-		String userLoginPayload = "{\"useremail\":\"UserTest@gmail.com\",\"password\":\"UserTest@123\"}";
+		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
@@ -348,7 +319,7 @@ public class BankBackendApplicationTests {
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
 
 		// Get role for the user
-		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "UserTest@gmail.com")
+		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "unitTest@gmail.com")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
@@ -357,7 +328,7 @@ public class BankBackendApplicationTests {
 				.andReturn();
 
 		// Debit the account
-		String debitPayload = "{\"transactionAmount\":500,\"accountIdFrom\":4}";
+		String debitPayload = "{\"transactionAmount\":500,\"accountIdFrom\":3}";
 		MvcResult debitResult = mockMvc.perform(post("/api/v1/debit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(debitPayload)
@@ -368,14 +339,15 @@ public class BankBackendApplicationTests {
 				.andReturn();
 
 		// Get the balance of the account
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 12345)
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", Matchers.is(500))) // Replace with the expected balance after debit
+				.andExpect(MockMvcResultMatchers.content().string("500"))
 				.andReturn();
 	}
+
 
 	@Order(11)
 	@Test
@@ -396,7 +368,7 @@ public class BankBackendApplicationTests {
 
 
 		// User login to get role
-		String userLoginPayload = "{\"useremail\":\"UserTest@gmail.com\",\"password\":\"UserTest@123\"}";
+		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
@@ -410,14 +382,14 @@ public class BankBackendApplicationTests {
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
 
 		// Get role for the user
-		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "UserTest@gmail.com")
+		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "unitTest@gmail.com")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", Matchers.is("AccountHolder"))) // Ensure this matches the actual role
 				.andReturn();
-		String creditPayload = "{\"transactionAmount\":300,\"accountIdFrom\":4,\"accountIdTo\":2}";
+		String creditPayload = "{\"transactionAmount\":300,\"accountIdFrom\":3,\"accountIdTo\":2}";
 		MvcResult creditResult = mockMvc.perform(post("/api/v1/credit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(creditPayload)
@@ -426,7 +398,7 @@ public class BankBackendApplicationTests {
 				.andExpect(jsonPath("$", Matchers.is("Transaction Success")))
 
 				.andReturn();
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 12345)
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
@@ -438,7 +410,7 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetBalanceAfterCredit() throws Exception
 	{
-		String userLoginPayload = "{\"useremail\":\"esha@gmail.com\",\"password\":\"admin123\"}";
+		String userLoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"admin123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
@@ -450,7 +422,7 @@ public class BankBackendApplicationTests {
 
 		String userResponseBody = userResult.getResponse().getContentAsString();
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 1234567891)
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
@@ -474,7 +446,7 @@ public class BankBackendApplicationTests {
 
 		String adminResponseBody = adminResult.getResponse().getContentAsString();
 		String adminAuthToken = JsonPath.read(adminResponseBody, "$.token");
-		String depositPayload = "{\"transactionAmount\":10000,\"accountIdFrom\":4}";
+		String depositPayload = "{\"transactionAmount\":10000,\"accountIdFrom\":3}";
 		MvcResult depositResult = mockMvc.perform(post("/api/v1/deposit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(depositPayload)
@@ -482,7 +454,7 @@ public class BankBackendApplicationTests {
 				.andDo(print())
 				.andReturn();
 
-		String userLoginPayload = "{\"useremail\":\"UserTest@gmail.com\",\"password\":\"UserTest@123\"}";
+		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
@@ -494,7 +466,7 @@ public class BankBackendApplicationTests {
 
 		String userResponseBody = userResult.getResponse().getContentAsString();
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance/{accountNo}", 12345)
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("Authorization", "Bearer " + userAuthToken))
 				.andDo(print())
@@ -505,7 +477,7 @@ public class BankBackendApplicationTests {
 	@Order(14)
 	@Test
 	public void testGetTransactions() throws Exception
-	{String userLoginPayload = "{\"useremail\":\"UserTest@gmail.com\",\"password\":\"UserTest@123\"}";
+	{String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
@@ -516,7 +488,7 @@ public class BankBackendApplicationTests {
 				.andReturn();
 		String userResponseBody = userResult.getResponse().getContentAsString();
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId/{accountId}",4)
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId/{accountId}",3)
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.header("Authorization", "Bearer " + userAuthToken)
 				)

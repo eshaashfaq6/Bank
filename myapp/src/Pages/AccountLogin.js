@@ -32,7 +32,7 @@ function AccountLogin() {
             
         }).then((res)=>{
             console.log("evaluation",res.data)
-            axios.get(`http://localhost:8080/api/v1/accountsByUserId/${res.data}`,{
+            axios.get(`http://localhost:8080/api/v1/accountsByUserIdd`,{
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

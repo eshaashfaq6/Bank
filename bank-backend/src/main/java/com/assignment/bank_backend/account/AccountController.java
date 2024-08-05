@@ -5,10 +5,12 @@ import com.assignment.bank_backend.accountUpdate.AccountUpdate;
 import com.assignment.bank_backend.exception.AccountNumberAlreadyExistsException;
 import com.assignment.bank_backend.exception.CnicAlreadyExistsException;
 import com.assignment.bank_backend.response.AccountLoginResponse;
+import com.assignment.bank_backend.users.User;
+import com.assignment.bank_backend.users.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -21,9 +23,10 @@ import java.util.Optional;
 public class AccountController {
 
     private final AccountService accountService;
-    public AccountController(AccountService accountService)
+    private final UserService userService;
+    public AccountController(AccountService accountService,UserService userService)
     {
-
+        this.userService=userService;
         this.accountService = Objects.requireNonNull(accountService,"Account Service must not be null");
     }
 
@@ -53,10 +56,21 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
-    @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
+    @PreAuthorize("hasAnyAuthority('admin')")
     @GetMapping("/api/v1/accountsByUserId/{UserId}")
     public ResponseEntity<Account> getccountsByUserId(@PathVariable("UserId") Long UserId) {
         Optional<Account> acc =accountService.findByUserId(UserId);
+        if (acc.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(acc.get());
+    }
+    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @GetMapping("/api/v1/accountsByUserIdd")
+    public ResponseEntity<Account> getccountByUserIdUser() {
+        String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> u=userService.findByEmail(UserEmail);
+        Optional<Account> acc =accountService.findByUserId(u.get().getUserId());
         if (acc.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -109,9 +123,13 @@ public class AccountController {
         return ResponseEntity.ok(acc.get().getAccountId());
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/getBalance/{accountNo}")
-    public Long getbalance(@PathVariable("accountNo") Long accountNo) {
-        Long balance=accountService.getBalance(accountNo);
+    @GetMapping("/api/v1/getBalance")
+    public Long getbalance() {
+        String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> u=userService.findByEmail(UserEmail);
+        Optional<Account> acc =accountService.findByUserId(u.get().getUserId());
+
+        Long balance=accountService.getBalance(acc.get().getAccountNumber());
 
         return balance;
     }
@@ -121,6 +139,11 @@ public class AccountController {
       AccountLoginResponse res =accountService.loginAccount(account);
       return ResponseEntity.ok(res);
 
+    }
+    @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @GetMapping("/api/v1/getstatus/{AccountNo}")
+    public String getStatus (@PathVariable Long AccountNo) {
+        return accountService.getstatus(AccountNo);
     }
 
 }

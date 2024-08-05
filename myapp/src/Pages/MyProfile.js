@@ -19,14 +19,46 @@ function MyProfile() {
                     }
                 });
                 setUser(userResponse.data);
-                
+                axios
+                .get(`http://localhost:8080/api/v1/getrole/${decoded.sub}`, {
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then(async(res) => {
+                    if(res.data=="admin"){
                 const accountResponse = await axios.get(`http://localhost:8080/api/v1/accountsByUserId/${userResponse.data.userId}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }
-                });
-                setAccount(accountResponse.data);
+                }).then((res)=>{
+                    if(res.data)
+                    {
+                        setAccount(accountResponse.data);
+                    }
+                }).catch((error) => {
+                    if (error.response && error.response.status === 404) {
+                       console.log("EEEEE")
+                    }})
+                }
+                else if(res.data==="AccountHolder")
+                {
+                   axios.get(`http://localhost:8080/api/v1/accountsByUserIdd`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    }).then(
+                        (res)=>{
+                            setAccount(res.data);
+                            console.log("KKKKKK",res.data)
+                        }
+                    )                    
+                }            
+            })
+                
             } catch (error) {
                 console.error("There was an error fetching the data!", error);
             }
@@ -94,6 +126,7 @@ function MyProfile() {
                             <input type="text" id="accountNumber" value={account.description || ''} readOnly className="light-blue-bg" />
                         </div>
                     </div>
+                   
                 </div>
             </div>
             <br></br>

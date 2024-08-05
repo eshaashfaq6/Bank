@@ -61,15 +61,13 @@ const MyTansactions = () => {
     }).then((res) => {
       const data = res.data;
       if (data) {
-        console.log("yahoo", data);
         axios.get(`http://localhost:8080/api/v1/transactionsByAccountId/${data}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           }
         }).then((res) => {
-          const transactionData = res.data; // Assuming res.data is an array of transactions
-          console.log("Transactions:", transactionData);
+          const transactionData = res.data; 
   
           const promises = transactionData.map((transaction, i) => {
             const promises = [];
@@ -84,7 +82,6 @@ const MyTansactions = () => {
                   }
                 }).then((res) => {
                   transactionData[i].accountIdFrom = res.data;
-                  console.log("its1", res.data);
                 })
               );
             }
@@ -99,7 +96,6 @@ const MyTansactions = () => {
                   }
                 }).then((res) => {
                   transactionData[i].accountIdTo = res.data;
-                  console.log("its2", res.data);
                 })
               );
             }
@@ -112,26 +108,25 @@ const MyTansactions = () => {
               transactionData.forEach(transaction => {
                 transaction.transactionDate = formatDate(transaction.transactionDate);
             });
-              setTransactions(transactionData); // Set the array of transactions
+              setTransactions(transactionData); 
             }
           });
         }).catch((error) => {
           if (error.response && error.response.status === 404) {
             console.log("No transactions found for the account.");
-            setTransactions([]); // Set to an empty array if no transactions are found
+            setTransactions([]); 
           }})
       }
     }).catch((error) => {
       if (error.response && error.response.status === 404) {
         console.log("No transactions found for the account.");
-        setTransactions([]); // Set to an empty array if no transactions are found
+        setTransactions([]); 
       }
     });
   }, []);
   
   const formatDate = (dateArray) => {
     const [year, month, day, hour, minute, second, nanosecond] = dateArray;
-    console.log(hour);
     const date = new Date(year, month - 1, day, hour, minute, second);
     return date.toLocaleString(); // You can customize the format as needed
 };         
