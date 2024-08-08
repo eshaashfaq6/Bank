@@ -52,16 +52,8 @@ const MyTansactions = () => {
   
   useEffect(() => {
     const token = Cookies.get('token');
-  
-    axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
-    }).then((res) => {
-      const data = res.data;
-      if (data) {
-        axios.get(`http://localhost:8080/api/v1/transactionsByAccountId/${data}`, {
+      
+        axios.get(`http://localhost:8080/api/v1/transactionsByAccountId`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -116,13 +108,8 @@ const MyTansactions = () => {
             console.log("No transactions found for the account.");
             setTransactions([]); 
           }})
-      }
-    }).catch((error) => {
-      if (error.response && error.response.status === 404) {
-        console.log("No transactions found for the account.");
-        setTransactions([]); 
-      }
-    });
+      
+    
   }, []);
   
   const formatDate = (dateArray) => {

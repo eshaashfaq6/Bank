@@ -66,9 +66,7 @@ const ViewUsers = () => {
           }
         });
         setaccountdata(data);
-      } else {
-        setaccountdata([]);
-      }
+      } 
 
       console.log(data);
     })

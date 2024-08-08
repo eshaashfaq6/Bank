@@ -25,13 +25,11 @@ function AdminLoginPage() {
             password: password,
         })
         .then((res) => {
-            console.log(res.data.token);
+            const token = res.headers.authorization.split(' ')[1]; 
             if(res.data)
             {
-                Cookies.set('token', res.data.token, { expires: 7 });
-                const decoded = jwtDecode(res.data.token);
-                console.log("Plz",decoded);
-                navigate("/myprofile")
+                Cookies.set('token', token, { expires: 7 });
+                navigate("/viewaccount")
             }
         })
         .catch((error) => { if (error.response && error.response.status === 403) {
@@ -76,7 +74,7 @@ function AdminLoginPage() {
                                             <div class="password-show d-flex align-items-center">
                                                 <input type="text" class="passInput" id="confirmPass" autocomplete="off" placeholder="Enter Your Password" value={password} name="password" onChange={passwordChangeHandler}/>
                                                 
-                                                <img class="showPass" src="loginImages/show-hide.png" alt="icon"/>
+                                                <img class="showPass" src="/loginImages/show-hide.png" alt="icon"/>
                                                
                                             </div>
                                             

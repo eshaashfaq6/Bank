@@ -109,11 +109,21 @@ public class AccountService {
     }
     public Optional<Account> setStatus(Long accountNumber) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
+
         if(existing.isPresent())
         {
-            existing.get().setStatus("Inactive");
+            if( existing.get().getStatus().equals("active")){
+
+                existing.get().setStatus("Inactive");
+            }
+            else if(existing.get().getStatus() .equals("Inactive")){
+                existing.get().setStatus("active");
+            }
+
             accountRepository.save(existing.get());
         }
+
+
         return existing;
     }
     public Long getBalance(Long accountNo) {

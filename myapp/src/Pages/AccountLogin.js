@@ -60,7 +60,7 @@ function AccountLogin() {
                         else if (data.message === "Login success") 
                         {
             
-                            navigate(`/transaction/${accountNo}`)
+                            navigate(`/transaction`)
                         } 
                         else if (data.message === "Pin Not match") 
                         {

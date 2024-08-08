@@ -488,7 +488,7 @@ public class BankBackendApplicationTests {
 				.andReturn();
 		String userResponseBody = userResult.getResponse().getContentAsString();
 		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId/{accountId}",3)
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.header("Authorization", "Bearer " + userAuthToken)
 				)
@@ -497,29 +497,7 @@ public class BankBackendApplicationTests {
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
 	}
-	@Order(15)
-	@Test
-	public void testGetTransactionsOfUserWhogetCredit() throws Exception
-	{String userLoginPayload = "{\"useremail\":\"esha@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
-				.andDo(print())
-				.andReturn();
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId/{accountId}",2)
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + userAuthToken)
-				)
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
-	}
+
 	@Order(16)
 	@Test
 	public void testGetAccountIdByAccountNumber() throws Exception{

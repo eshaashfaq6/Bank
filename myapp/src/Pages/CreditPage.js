@@ -4,7 +4,6 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 function Credit()
 {
-    let {accountNo}=useParams();
     const navigate=useNavigate();
     const [amount,setAmount]=useState(0);    
     const [recieverAccountNo,setRecieverAmountNo]=useState(0);    
@@ -12,6 +11,7 @@ function Credit()
     const [checkBalance,setBalanceCheck]=useState(false);
      const [transferToSelf, setTransferToSelf] = useState(false);
      
+     const [accountNo, setAccountNo] = useState(0);
      const [status, setstatus] = useState(false);
     const AmountChangeHandler=(event)=>
     {
@@ -28,78 +28,75 @@ function Credit()
         
         }
       
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const token = Cookies.get('token');
-        if (recieverAccountNo === accountNo) {
-            setcheckRecieverAmountNo(false);
-            setstatus(false);
-            setTransferToSelf(true);
-            return; 
-        }
-
-        axios.get(`http://localhost:8080/api/v1/getAccountId/${recieverAccountNo}`,{
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }})
-        .then((res) => {
-            const recieverId = res.data;
-            if(recieverId)
-            {
-                axios.get(`http://localhost:8080/api/v1/getstatus/${recieverAccountNo}`,{
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            const token = Cookies.get('token');
+            
+            try {
+                const accountNoResponse = await axios.get('http://localhost:8080/api/v1/getAccountNoOfLoginUser', {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
-                    }}).then((res)=>{
-                        if(res.data=="active"){
-                        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${token}`
-                            }})
-                        .then((res)=>{
-                        axios.post(`http://localhost:8080/api/v1/credit`,{
-                            transactionAmount: amount,
-                            accountIdFrom:res.data,
-                            accountIdTo: recieverId,
+                    }
+                });
         
-                        },{
+                const accountNo = accountNoResponse.data;
+                if (recieverAccountNo == accountNo) {
+                    setcheckRecieverAmountNo(false);
+                    setstatus(false);
+                    setTransferToSelf(true);
+                    return;
+                }
+                const recieverIdResponse = await axios.get(`http://localhost:8080/api/v1/getAccountId/${recieverAccountNo}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+        
+                const recieverId = recieverIdResponse.data;
+                if (recieverId) {
+                    const statusResponse = await axios.get(`http://localhost:8080/api/v1/getstatus/${recieverAccountNo}`, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+        
+                    if (statusResponse.data === "active") {
+                        const creditResponse = await axios.post('http://localhost:8080/api/v1/credit', {
+                            transactionAmount: amount,
+                            accountIdTo: recieverId,
+                        }, {
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${token}`
-                            }})
-                        .then((res)=>{
-                            if(res.data=="Transaction Success")
-                            {
-                                setcheckRecieverAmountNo(false)
-                                setBalanceCheck(false)
-                                navigate(`/balance/${accountNo}`)
                             }
-                            else if(res.data=="Insufficient balance")
-                            {
-                                setcheckRecieverAmountNo(false)
-                                setBalanceCheck(true)
-                            }
-                        })})}
-                        else{
-                            setstatus(true);
+                        });
+        
+                        if (creditResponse.data === "Transaction Success") {
                             setcheckRecieverAmountNo(false);
-                            setTransferToSelf(false);
+                            setBalanceCheck(false);
+                            navigate('/balance');
+                        } else if (creditResponse.data === "Insufficient balance") {
+                            setcheckRecieverAmountNo(false);
+                            setBalanceCheck(true);
                         }
-                    })
-             
+                    } else {
+                        setstatus(true);
+                        setcheckRecieverAmountNo(false);
+                        setTransferToSelf(false);
+                    }
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 404) {
+                    setcheckRecieverAmountNo(true);
+                    setstatus(false);
+                    setTransferToSelf(false);
+                }
             }
-           
-        })
-        .catch((error) => {
-            if (error.response && error.response.status === 404) {
-                setcheckRecieverAmountNo(true);
-                setstatus(false);
-                setTransferToSelf(false);
-               
-            }})
-    };   
+        };
+        
     return (
      <> 
     <div class="position-fixed d-flex flex-column text-center" id="draggableDiv">

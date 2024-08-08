@@ -20,17 +20,10 @@ function Header() {
     const token = Cookies.get('token');
 
     if (token) {
-      try {
         const decoded = jwtDecode(token);
-        axios
-          .get(`http://localhost:8080/api/v1/getrole/${decoded.sub}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((res) => {
-            const data = res.data;
+        console.log(decoded)
+       
+            const data = decoded.role;
             if (data === 'admin') {
               setAdminShow(true);
               setUserShow(false); // Reset userShow if admin
@@ -41,15 +34,7 @@ function Header() {
               setAdminShow(false);
               setUserShow(false);
             }
-          })
-          .catch((error) => {
-            console.error('Error fetching user role:', error);
-            // Handle error if needed
-          });
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        // Handle decoding error if needed
-      }
+          
     } else {
       console.log('Token not found in cookies');
       setAdminShow(false);

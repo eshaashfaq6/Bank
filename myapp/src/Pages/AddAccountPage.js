@@ -255,7 +255,7 @@ function AddAccount() {
                                     <div class="col-12">
                                         <div class="single-input">
                                             <label for="account-CNIC">CNIC</label>
-                                            <input type="text" id="CNIC" placeholder="Enter CNIC here" name="CNIC" value={CNIC} onChange={CnicChangeHandler} onBlur={cnicBlurHandler}/>
+                                            <input type="text" id="CNIC" placeholder="Enter CNIC here" name="CNIC" pattern="^\d{13}$" value={CNIC} onChange={CnicChangeHandler} onBlur={cnicBlurHandler}/>
                                         </div> 
                                         {cnicIsInvalid && <p className="text-danger">{enteredCnicIsValid}</p>}
                                         {cnicExists && <p className="text-danger">CNIC Already Exists</p>}

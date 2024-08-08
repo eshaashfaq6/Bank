@@ -9,11 +9,10 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    @Query("Select t from transactions t ORDER BY t.transactionId DESC")
-    List<Transaction> findAlltransac();
+    List<Transaction> findAll();
     Optional<Transaction> findById(Long id);
 
-    @Query("Select t from transactions t where t.accountIdFrom= :accountId ORDER BY t.transactionId DESC")
+   // @Query("Select t from transactions t where t.accountIdFrom= :accountId ORDER BY t.transactionId DESC")
     List<Transaction> findByAccountIdFrom(@Param("accountId") Long accountId);
     List<Transaction> findByAccountIdTo(Long accountId);
 }

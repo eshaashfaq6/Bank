@@ -6,16 +6,16 @@ import com.assignment.bank_backend.login.Login;
 import com.assignment.bank_backend.response.LoginResponse;
 import com.assignment.bank_backend.services.AuthenticationService;
 import com.assignment.bank_backend.services.JwtService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
-@CrossOrigin
+
+@CrossOrigin(allowedHeaders = "*", exposedHeaders = "Authorization")
 @RestController
 public class UserController {
     private final JwtService jwtService;
@@ -77,15 +77,18 @@ public class UserController {
         }}
 
     @PostMapping("/api/v1/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody Login login) {
-          try{ User authenticatedUser = authenticationService.authenticate(login);
+    public ResponseEntity<?> authenticate(@RequestBody Login login) {
+          try{
+              User authenticatedUser = authenticationService.authenticate(login);
+              String jwtToken = jwtService.generateToken(authenticatedUser, authenticatedUser.getRoles());
+              HttpHeaders headers = new HttpHeaders();
+              headers.set("Authorization", "Bearer " + jwtToken);
 
-           String jwtToken = jwtService.generateToken(authenticatedUser);
-           LoginResponse loginResponse = new LoginResponse();
-           loginResponse.setToken(jwtToken);
-           loginResponse.setExpiresIn(jwtService.getExpirationTime());
+              Map<Object,Object> newMap= new HashMap<Object,Object>();
+              newMap.put("message","Login Sucessful");
 
-        return ResponseEntity.ok(loginResponse);}catch (AuthenticationException e){
+              return new ResponseEntity<>(newMap,headers,HttpStatus.ACCEPTED);
+          }catch (AuthenticationException e){
             return ResponseEntity.notFound().build();
 
         }

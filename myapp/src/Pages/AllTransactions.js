@@ -96,9 +96,21 @@ const AllTansactions = () => {
   
           Promise.all(promises).then(() => {
             if (Array.isArray(transactionData)) {
+              
               transactionData.forEach(transaction => {
+                if(transaction.transactionId)
                 transaction.transactionDate = formatDate(transaction.transactionDate);
             });
+            for(let i=0;i<transactionData.length;i++)
+            {
+              for(let j=i+1;j<transactionData.length;j++)
+              if(transactionData[i].transactionId<transactionData[j].transactionId)
+              {
+                let swap=transactionData[i];
+                transactionData[i]=transactionData[j];
+                transactionData[j]=swap;
+              }
+            }
               setTransactions(transactionData); // Set the array of transactions
             }
           });

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import axios from "axios";
+import CryptoJS from "crypto-js";
 function UserLoginPage() {
     const navigate=useNavigate();
     const [email,setEmail]=useState("");
@@ -19,18 +20,19 @@ function UserLoginPage() {
     }
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("i m here");
+        
+        const hashedPassword = CryptoJS.SHA256(password).toString();
         let user=axios.post("http://localhost:8080/api/v1/login", {
             useremail: email,
-            password: password,
+            password: hashedPassword,
         })
         .then((res) => {
             console.log(res.data.token);
             if(res.data)
             {
-                Cookies.set('token', res.data.token, { expires: 7 });
-                const decoded = jwtDecode(res.data.token);
-                console.log("Plz",decoded);
+                const token = res.headers.authorization.split(' ')[1]; 
+                Cookies.set('token',token, { expires: 7 });
+                const decoded = jwtDecode(token);
                 navigate("/myprofile")
             }
         })
@@ -81,7 +83,7 @@ function UserLoginPage() {
                                             <div class="password-show d-flex align-items-center">
                                                 <input type="text" class="passInput" id="confirmPass" autocomplete="off" placeholder="Enter Your Password" value={password} name="password" onChange={passwordChangeHandler}/>
                                                 
-                                                <img class="showPass" src="loginImages/show-hide.png" alt="icon"/>
+                                                <img class="showPass" src="/loginImages/show-hide.png" alt="icon"/>
                                                
                                             </div>
                                            

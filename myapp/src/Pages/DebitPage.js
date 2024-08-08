@@ -17,37 +17,20 @@ function CashWithdrawl() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const token = Cookies.get('token');
-        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`, {
+        axios.post(`http://localhost:8080/api/v1/debit`, {
+            transactionDescription: "Debit Transaction",
+            transactionAmount: amount
+        }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
         .then((res) => {
-            const data = res.data;
-            if (data) {
-                axios.post(`http://localhost:8080/api/v1/debit`, {
-                    transactionDescription: "string",
-                    transactionAmount: amount,
-                    accountIdFrom: data
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                .then((res) => {
-                    if (res.data === "Transaction Success") {
-                        navigate(`/balance/${accountNo}`);
-                    } else if (res.data === "Insufficient balance") {
-                        setBalanceCheck(true);
-                    }
-                });
-            }
-        })
-        .catch((error) => {
-            if (error.response && error.response.status === 404) {
-                // Handle 404 error
+            if (res.data === "Transaction Success") {
+                navigate(`/balance`);
+            } else if (res.data === "Insufficient balance") {
+                setBalanceCheck(true);
             }
         });
     };

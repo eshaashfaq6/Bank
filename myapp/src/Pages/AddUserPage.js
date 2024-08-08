@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
 
 import Cookies from 'js-cookie';
 import axios from "axios";
@@ -143,12 +144,14 @@ function AddUser() {
         if(formIsValid)
         {
         const token = Cookies.get('token');
-        
+        const hashedPassword = CryptoJS.SHA256(password).toString();
+        console.log('Hashed Password:', hashedPassword);
+    
         axios.post("http://localhost:8080/api/v1/users", {
             username:name,
             useremail: email,
             useraddress:address,
-            password: password
+            password: hashedPassword
         },{
         headers: {
             'Content-Type': 'application/json',

@@ -134,6 +134,14 @@ public class AccountController {
         return balance;
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
+    @GetMapping("/api/v1/getAccountNoOfLoginUser")
+    public Long getAccountNoOfLoginUser() {
+        String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> u=userService.findByEmail(UserEmail);
+        Optional<Account> acc =accountService.findByUserId(u.get().getUserId());
+        return acc.get().getAccountNumber();
+    }
+    @PreAuthorize("hasAnyAuthority('AccountHolder')")
       @PostMapping("/api/v1/accountLogin")
       public ResponseEntity<AccountLoginResponse> accountLogin(@RequestBody AccountLogin account) {
       AccountLoginResponse res =accountService.loginAccount(account);
@@ -145,5 +153,6 @@ public class AccountController {
     public String getStatus (@PathVariable Long AccountNo) {
         return accountService.getstatus(AccountNo);
     }
+
 
 }

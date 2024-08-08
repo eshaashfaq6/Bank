@@ -5,7 +5,10 @@ import Cookies from 'js-cookie';
 
 const ViewAccounts = () => {
   const navigate = useNavigate();
-
+  const [loader, setloader] = useState(false);
+  const [accountdata, setaccountdata] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  
   // Dark blue theme styles
   const containerStyle = {
     display: 'flex',
@@ -47,9 +50,9 @@ const ViewAccounts = () => {
     backgroundColor: '#cce0ff', // Light blue
   };
 
-  const [accountdata, setaccountdata] = useState([]);
-
   useEffect(() => {
+    setloader(true);
+    
     const token = Cookies.get('token');
     axios.get('http://localhost:8080/api/v1/getaccounts', {
       headers: {
@@ -61,11 +64,9 @@ const ViewAccounts = () => {
       const data = res.data;
       if (data) {
         setaccountdata(data);
-      } else {
-        setaccountdata([]);
       }
     });
-  }, [accountdata]);
+  }, []);
 
   const handleDelete = (accountNumber) => {
     const token = Cookies.get('token');
@@ -76,11 +77,23 @@ const ViewAccounts = () => {
       }
     })
     .then((res) => {
+      setaccountdata((prevData) =>
+        prevData.map((account) =>
+          account.accountNumber === accountNumber
+            ? { ...account, status: account.status === 'active' ? 'Inactive' : 'active' }
+            : account
+        )
+      );
     })
     .catch((error) => {
       console.error('Error deleting account:', error);
     });
   };
+
+  // Filter accounts based on search term
+  const filteredAccounts = accountdata.filter(account =>
+    account.accountNumber.toString().includes(searchTerm)
+  );
 
   return (
     <div>
@@ -89,6 +102,20 @@ const ViewAccounts = () => {
         <h3 style={{ color: '#003366', fontFamily: 'Arial, sans-serif', textAlign: 'center', marginBottom: '20px' }}>
           Accounts
         </h3>
+        <input
+          type="text"
+          placeholder="Search by account number"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            padding: '8px',
+            fontSize: '16px',
+            marginBottom: '20px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            width: '80%', // Adjust width as needed
+          }}
+        />
         <table style={tableStyle}>
           <thead>
             <tr>
@@ -106,22 +133,22 @@ const ViewAccounts = () => {
             </tr>
           </thead>
           <tbody>
-            {accountdata.map((account, index) => (
+            {filteredAccounts.map((account, index) => (
               <tr
                 key={account.id}
                 style={rowStyle(index)}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = hoverStyle.backgroundColor)}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = rowStyle(index).backgroundColor)}
               >
-                <td style={cellStyle}>{account.accountId}</td>
-                <td style={cellStyle}>{account.accountNumber}</td>
-                <td style={cellStyle}>{account.description}</td>
-                <td style={cellStyle}>{account.cnic}</td>
-                <td style={cellStyle}>{account.mobileNo}</td>
-                <td style={cellStyle}>{account.accountType}</td>
-                <td style={cellStyle}>{account.balance}</td>
-                <td style={cellStyle}>{account.userId}</td>
-                <td style={cellStyle}>{account.status}</td>
+                <td style={cellStyle}>{account.accountId || ''}</td>
+                <td style={cellStyle}>{account.accountNumber || ''}</td>
+                <td style={cellStyle}>{account.description || ''}</td>
+                <td style={cellStyle}>{account.cnic || ''}</td>
+                <td style={cellStyle}>{account.mobileNo || ''}</td>
+                <td style={cellStyle}>{account.accountType || ''}</td>
+                <td style={cellStyle}>{account.balance || ''}</td>
+                <td style={cellStyle}>{account.userId || ''}</td>
+                <td style={cellStyle}>{account.status || ''}</td>
                 
                 <td style={cellStyle}>
                   <a 
@@ -162,32 +189,33 @@ const ViewAccounts = () => {
                     onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#c82333')} // Darker red on hover
                     onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#dc3545')}
                   >
-                    Delete
+                    Change Status
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <br></br>
+        <br />
         <a 
-                   href={`/adduser`} 
-                    style={{
-                      display: 'inline-block',
-                      backgroundColor: '#007bff',
-                      color: 'white',
-                      padding: '8px 16px',
-                      borderRadius: '4px',
-                      textDecoration: 'none',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.3s',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-                  >
-                    + Add Account
-                  </a><br></br><br></br>
+          href={`/adduser`} 
+          style={{
+            display: 'inline-block',
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '8px 16px',
+            borderRadius: '4px',
+            textDecoration: 'none',
+            textAlign: 'center',
+            cursor: 'pointer',
+            transition: 'background-color 0.3s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+        >
+          + Add Account
+        </a>
+        <br /><br />
       </div>
     </div>
   );

@@ -11,7 +11,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Objects;
 
@@ -36,8 +38,9 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/actuator/health","/applications","/api/v1/login","/api/v1/getaccounts","/api/v1/getrole/", "/swagger-ui/**", " /v3/api-docs", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health","/applications","/api/v1/login","/api/v1/getrole/", "/swagger-ui/**", " /v3/api-docs", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -47,4 +50,5 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 }

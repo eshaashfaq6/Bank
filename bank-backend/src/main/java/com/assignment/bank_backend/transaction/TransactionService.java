@@ -20,11 +20,13 @@ public class  TransactionService {
 
     public List<Transaction> findAll() {
 
-        return transactionRepository.findAlltransac();
+        return transactionRepository.findAll();
     }
 
     public List<Transaction> findTransByAccountId(Long accountId) {
         List<Transaction> result=transactionRepository.findByAccountIdFrom(accountId);
+        result.sort((t1, t2) -> Long.compare(t2.getTransactionId(), t1.getTransactionId()));
+
         return result;
     }
 
@@ -52,6 +54,7 @@ public class  TransactionService {
     }
 
     public String debit(Transaction transaction) {
+
         transaction.setTransactionDate(LocalDateTime.now());
         transaction.setTransactionIndicator("DB");
         transaction.setTransactionDescription("Debit Transaction");

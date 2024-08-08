@@ -13,23 +13,15 @@ function Protected({ Component, allowedRoles }) {
     
     if (token) {
       const decoded = jwtDecode(token);
-      axios
-        .get(`http://localhost:8080/api/v1/getrole/${decoded.sub}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const data = res.data;
+     
+          const data = decoded.role;
           setIsAuthenticated(true);
           if (allowedRoles.includes(data)) {
             setHasRole(true);
           }
          
-        });
     }
-  }, [allowedRoles]);
+  }, []);
 
   const containerStyle = {
     display: 'flex',

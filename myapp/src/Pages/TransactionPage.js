@@ -1,8 +1,5 @@
 import { useParams,NavLink,useNavigate} from "react-router-dom";
 function Transaction() {
-    let {accountNo}=useParams();
-    
-    console.log(accountNo)
     return (
      <>
     <section class="solutions-business">
@@ -23,9 +20,9 @@ function Transaction() {
                                 <img src="/images/checking.png" alt="checking"/>
                             </div>
                             <div class="content">
-                                <a href={`/debit/${accountNo}`}><h5>Debit/Cash Withdrawl</h5></a>
+                                <a href={`/debit`}><h5>Debit/Cash Withdrawl</h5></a>
                                 <p>Click the link below to withdraw cash easily from your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                                <a href={`/debit/${accountNo}`} class="btn-arrow">Cash Withdraw
+                                <a href={`/debit`} class="btn-arrow">Cash Withdraw
                                     <img src="/images/arrow-right.png" alt="arrow"/>
                                 </a>
                             </div>
@@ -36,9 +33,9 @@ function Transaction() {
                             <div class="thumb d-flex justify-content-center align-items-center">
                                 <img src="/images/savings.png" alt="checking"/>
                             </div>
-                            <div class="content"> <a href={`/credit/${accountNo}`}><h5>Credit/Transfer</h5></a>
+                            <div class="content"> <a href={`/credit`}><h5>Credit/Transfer</h5></a>
                                 <p>Click the link below to Transfer money to another account easily from your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                                <a href={`/credit/${accountNo}`} class="btn-arrow">Transfer
+                                <a href={`/credit`} class="btn-arrow">Transfer
                                     <img src="/images/arrow-right.png" alt="arrow"/>
                                 </a>
                             </div>
@@ -50,9 +47,9 @@ function Transaction() {
                                 <img src="/images/checking.png" alt="checking"/>
                             </div>
                             <div class="content">
-                            <a href={`/balance/${accountNo}`}><h5>Balance Enquiry</h5></a>
+                            <a href={`/balance`}><h5>Balance Enquiry</h5></a>
                                 <p>Click the link below to chcek your balance .Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                                <a href={`/balance/${accountNo}`} class="btn-arrow">Balance Enquiry
+                                <a href={`/balance`} class="btn-arrow">Balance Enquiry
                                     <img src="/images/arrow-right.png" alt="arrow"/>
                                 </a>
                             </div>
@@ -77,9 +74,9 @@ function Transaction() {
                     <img src="/images/business.png" alt="checking"/>
                 </div>
                 <div class="content">
-                    <a href={`/mytransac/${accountNo}`}><h5>My Transactions</h5></a>
+                    <a href={`/mytransac`}><h5>My Transactions</h5></a>
                     <p>Click the link below to see all transactions of your account. Enjoy hassle-free transactions with our convenient cash withdrawal options.</p>
-                    <a href={`/mytransac/${accountNo}`} class="btn-arrow">My transactions
+                    <a href={`/mytransac`} class="btn-arrow">My transactions
                         <img src="/images/arrow-right.png" alt="arrow"/>
                     </a>
                 </div>

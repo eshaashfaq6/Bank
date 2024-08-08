@@ -48,13 +48,13 @@ const router=createBrowserRouter([
 
 
 
-  {path:'/transaction/:accountNo',element:<Protected Component={Transaction} allowedRoles={'AccountHolder'}/>},
-  {path:'/debit/:accountNo',element:<Protected Component={CashWithdrawl} allowedRoles={'AccountHolder'}/>},
-  {path:'/credit/:accountNo',element:<Protected Component={Credit} allowedRoles={'AccountHolder'}/>},
-  {path:'/balance/:accountNo',element:<Protected Component={Balance} allowedRoles={'AccountHolder'}/>},
+  {path:'/transaction',element:<Protected Component={Transaction} allowedRoles={'AccountHolder'}/>},
+  {path:'/debit',element:<Protected Component={CashWithdrawl} allowedRoles={'AccountHolder'}/>},
+  {path:'/credit',element:<Protected Component={Credit} allowedRoles={'AccountHolder'}/>},
+  {path:'/balance',element:<Protected Component={Balance} allowedRoles={'AccountHolder'}/>},
   {path:'/accountLogin',element:<Protected Component={AccountLogin} allowedRoles={'AccountHolder'}/>},
   {path:'/myprofile',element:<MyProfile></MyProfile>},
-  {path:'/mytransac/:accountNo',element:<Protected Component={MyTansactions} allowedRoles={'AccountHolder'}/>},
+  {path:'/mytransac',element:<Protected Component={MyTansactions} allowedRoles={'AccountHolder'}/>},
   
   
 ],
@@ -62,6 +62,7 @@ const router=createBrowserRouter([
 
 ]);
 function App() {
+  
   return <RouterProvider router={router}/>;
 }
 

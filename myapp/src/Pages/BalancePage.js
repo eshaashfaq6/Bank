@@ -4,8 +4,6 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 function Balance()
 {
-    let {accountNo}=useParams();
-    const navigate=useNavigate();
     const [balance,setBalance]=useState("");
     useEffect(()=>
     {
@@ -43,7 +41,7 @@ function Balance()
                         <div class="section-text">
                             <h2 class="title">Your Current Balance:</h2>
                             <h2 className="text-danger">{balance}</h2>
-                            <a href={`/transaction/${accountNo}`} class="btn-arrow"><p color="black">back</p>
+                            <a href={`/transaction`} class="btn-arrow"><p color="black">back</p>
                                     
                                 </a>
                         </div>

@@ -6,10 +6,10 @@ import {jwtDecode} from 'jwt-decode';
 function MyProfile() {
     const [user, setUser] = useState({});
     const [account, setAccount] = useState({});
-    const token = Cookies.get('token');
     
     useEffect(() => {
         const fetchData = async () => {
+            const token = Cookies.get('token');
             const decoded = jwtDecode(token);
             try {
                 const userResponse = await axios.get(`http://localhost:8080/api/v1/getUserByEmail/${decoded.sub}`, {
@@ -19,16 +19,9 @@ function MyProfile() {
                     }
                 });
                 setUser(userResponse.data);
-                axios
-                .get(`http://localhost:8080/api/v1/getrole/${decoded.sub}`, {
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                  },
-                })
-                .then(async(res) => {
-                    if(res.data=="admin"){
-                const accountResponse = await axios.get(`http://localhost:8080/api/v1/accountsByUserId/${userResponse.data.userId}`, {
+               
+                    if(decoded.role=="admin"){
+                const accountResponse = await axios.get(`http://localhost:8080/api/v1/accountsByUserId/1`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -43,7 +36,7 @@ function MyProfile() {
                        console.log("EEEEE")
                     }})
                 }
-                else if(res.data==="AccountHolder")
+                else if(decoded.role==="AccountHolder")
                 {
                    axios.get(`http://localhost:8080/api/v1/accountsByUserIdd`, {
                         headers: {
@@ -57,15 +50,15 @@ function MyProfile() {
                         }
                     )                    
                 }            
-            })
+            
                 
             } catch (error) {
                 console.error("There was an error fetching the data!", error);
             }
         };
         
-        if (token) fetchData();
-    }, [token, user.userId]);
+        fetchData();
+    }, []);
 
     return (
         <div><br></br>
