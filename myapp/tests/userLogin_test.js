@@ -81,4 +81,5 @@ Feature('User login');
      I.click('//button[text()="Transfer"]');   
      I.amOnPage('http://localhost:3000/balance')
      I.see('12500')
+     //Hello
  });
