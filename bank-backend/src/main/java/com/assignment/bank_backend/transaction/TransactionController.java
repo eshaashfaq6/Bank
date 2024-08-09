@@ -19,14 +19,12 @@ import java.util.Optional;
 @RestController
 public class TransactionController {
     private final TransactionService transactionService;
-    private final AccountRepository accountRepository;
     private final UserService userService;
     private final AccountService accountService;
 
-    public TransactionController(UserService userService,AccountService accountService,TransactionService transactionService, AccountRepository accountRepository)
+    public TransactionController(UserService userService,AccountService accountService,TransactionService transactionService )
     {
         this.transactionService = transactionService;
-        this.accountRepository = accountRepository;
         this.accountService= Objects.requireNonNull(accountService,"Account Service must not be null");
         this.userService=userService;
     }
@@ -38,7 +36,7 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/transactionsByAccountId")
+    @GetMapping("/api/v1/accounts/profile/transactions")
     public ResponseEntity<List<Transaction>> getByAccountId() {
         String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> u=userService.findByEmail(UserEmail);
@@ -51,14 +49,16 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @PostMapping("/api/v1/deposit")
+    @PostMapping("/api/v1/transactions/deposit")
     public ResponseEntity<Transaction> deposit(@RequestBody Transaction transaction) {
+        Optional<Account> acc=accountService.findByAccountNo(transaction.getAccountIdFrom());
+        transaction.setAccountIdFrom(acc.get().getAccountId());
         transaction= transactionService.deposit(transaction);
         return ResponseEntity.created(URI.create("/api/v1/deposit" + transaction.getTransactionId())).body(transaction);
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @PostMapping("/api/v1/debit")
+    @PostMapping("/api/v1/transactions/debit")
     public String debit(@RequestBody Transaction transaction) {
         String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> u=userService.findByEmail(UserEmail);
@@ -69,7 +69,7 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @PostMapping("/api/v1/credit")
+    @PostMapping("/api/v1/transactions/credit")
     public String credit(@RequestBody Transaction transaction) {
         String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> u=userService.findByEmail(UserEmail);

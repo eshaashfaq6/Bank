@@ -16,8 +16,7 @@ function UpdateAccountHelp() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const token = Cookies.get('token');
-        console.log("i m here");
-        axios.get(`http://localhost:8080/api/v1/accountsByAccountNo/${accountNumber}`
+        axios.get(`http://localhost:8080/api/v1/accounts/ByaccountNo/${accountNumber}`
             ,{
                 headers: {
                     'Content-Type': 'application/json',

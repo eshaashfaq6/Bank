@@ -48,7 +48,7 @@ const ViewUsers = () => {
 
   useEffect(() => {
     const token = Cookies.get('token');
-    axios.get('http://localhost:8080/api/v1/getusers', {
+    axios.get('http://localhost:8080/api/v1/users', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`

@@ -18,13 +18,11 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder)
+    {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.accountRepository=accountRepository;
-
     }
 
     public List<User> findAll(Integer page, Integer size) {
@@ -50,27 +48,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
 
     }
-    public Optional<User> findById(Long userId) {
-        return userRepository.findById(userId);
-    }
-
     public Optional<User> findByEmail(String userEmail) {
-        return userRepository.findByUseremail(userEmail);
-    }
-    public String getrole(String email) {
-        Optional<User> user = userRepository.findByUseremail(email);
-        if (user.isPresent()) {
-            return user.get().getRoles();
-        }
-        return null;
-    }
 
-    public Long getUserID(String email) {
-        Optional<User> user = userRepository.findByUseremail(email);
-        if (user.isPresent()) {
-            return user.get().getUserId();
-        }
-        return null;
+        return userRepository.findByUseremail(userEmail);
     }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -53,7 +53,7 @@ const MyTansactions = () => {
   useEffect(() => {
     const token = Cookies.get('token');
       
-        axios.get(`http://localhost:8080/api/v1/transactionsByAccountId`, {
+        axios.get(`http://localhost:8080/api/v1/accounts/profile/transactions`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -67,7 +67,7 @@ const MyTansactions = () => {
             if (transaction.accountIdFrom != null) {
               const accountIdFrom = transaction.accountIdFrom;
               promises.push(
-                axios.get(`http://localhost:8080/api/v1/getAccountNo/${accountIdFrom}`, {
+                axios.get(`http://localhost:8080/api/v1/accounts/${accountIdFrom}/accountNo`, {
                   headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -81,7 +81,7 @@ const MyTansactions = () => {
             if (transaction.accountIdTo != null) {
               const accountIdTo = transaction.accountIdTo;
               promises.push(
-                axios.get(`http://localhost:8080/api/v1/getAccountNo/${accountIdTo}`, {
+                axios.get(`http://localhost:8080/api/v1/accounts/${accountIdTo}/accountNo`, {
                   headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

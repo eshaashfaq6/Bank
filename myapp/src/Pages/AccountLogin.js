@@ -20,67 +20,57 @@ function AccountLogin() {
         setPin(event.target.value);
     }
     const handleSubmit = (event) => {
-        event.preventDefault();
-        console.log("i m here");        
+        event.preventDefault();       
         const token = Cookies.get('token');
-        const decoded = jwtDecode(token);
-        axios.get(`http://localhost:8080/api/v1/getuserId/${decoded.sub}`,{
+        axios.get(`http://localhost:8080/api/v1/users/profile/accounts`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
-            
         }).then((res)=>{
-            console.log("evaluation",res.data)
-            axios.get(`http://localhost:8080/api/v1/accountsByUserIdd`,{
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then((res)=>{
-                if(res.data.accountNumber==accountNo)
-                {
-                    let user=axios.post("http://localhost:8080/api/v1/accountLogin", {
-                        accountNo:accountNo,
-                        pin:pin
-                    },{
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }})
-                    .then((res) => {
-                        console.log(user);
-                        const data = res.data;
-                        console.log(data)
-                        if (data.message === "Account No not exists")
-                        {
-                            setAccountInvalid(true);
-                        } 
-            
-                        else if (data.message === "Login success") 
-                        {
-            
-                            navigate(`/transaction`)
-                        } 
-                        else if (data.message === "Pin Not match") 
-                        {
-                            
-                            setAccountInvalid(false);
-                            setPinInvalid(true);
-                        } 
-                    })
-                    .catch((error) => {
-                        console.error("Error during login:", error);
-                    });
-                }
-                else{
-                    setinvalidcredentials(true);
-                }
-            })
+            if(res.data.accountNumber==accountNo)
+            {
+                let user=axios.post("http://localhost:8080/api/v1/accounts/Login", {
+                    accountNo:accountNo,
+                    pin:pin
+                },{
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }})
+                .then((res) => {
+                    console.log(user);
+                    const data = res.data;
+                    console.log(data)
+                    if (data.message === "Account No not exists")
+                    {
+                        setAccountInvalid(true);
+                    } 
+        
+                    else if (data.message === "Login success") 
+                    {
+        
+                        navigate(`/transaction`)
+                    } 
+                    else if (data.message === "Pin Not match") 
+                    {
+                        
+                        setAccountInvalid(false);
+                        setPinInvalid(true);
+                    } 
+                })
+                .catch((error) => {
+                    console.error("Error during login:", error);
+                });
+            }
+            else{
+                console.log("Login user in website can access only his account not other accounts");
+                setinvalidcredentials(true);
+            }
+        })
 
             
-        }
-        )
+                
         
     };   
     return (

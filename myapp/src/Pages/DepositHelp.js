@@ -21,7 +21,7 @@ function DepositHelp()
         console.log("i m here");
         const token = Cookies.get('token');
         
-        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
+        axios.get(`http://localhost:8080/api/v1/accounts/ByaccountNo/${accountNo}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

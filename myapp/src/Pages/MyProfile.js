@@ -12,33 +12,16 @@ function MyProfile() {
             const token = Cookies.get('token');
             const decoded = jwtDecode(token);
             try {
-                const userResponse = await axios.get(`http://localhost:8080/api/v1/getUserByEmail/${decoded.sub}`, {
+               await axios.get(`http://localhost:8080/api/v1/users/profile`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }
-                });
-                setUser(userResponse.data);
+                })
+                .then((res)=>{
+                    setUser(res.data);
                
-                    if(decoded.role=="admin"){
-                const accountResponse = await axios.get(`http://localhost:8080/api/v1/accountsByUserId/1`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                }).then((res)=>{
-                    if(res.data)
-                    {
-                        setAccount(accountResponse.data);
-                    }
-                }).catch((error) => {
-                    if (error.response && error.response.status === 404) {
-                       console.log("EEEEE")
-                    }})
-                }
-                else if(decoded.role==="AccountHolder")
-                {
-                   axios.get(`http://localhost:8080/api/v1/accountsByUserIdd`, {
+                   axios.get(`http://localhost:8080/api/v1/users/profile/accounts`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
@@ -48,10 +31,13 @@ function MyProfile() {
                             setAccount(res.data);
                             console.log("KKKKKK",res.data)
                         }
-                    )                    
-                }            
-            
-                
+                    ).catch((error)=>{
+                        if(error.response && error.response.status === 404)
+                        {
+                            console.log("No account Found against this userID");
+                        }
+                    })     
+                })
             } catch (error) {
                 console.error("There was an error fetching the data!", error);
             }

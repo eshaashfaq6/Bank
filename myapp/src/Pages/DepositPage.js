@@ -17,38 +17,19 @@ function Deposit()
   
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("i m here");
         const token = Cookies.get('token');
-        axios.get(`http://localhost:8080/api/v1/getAccountId/${accountNo}`,{
+        axios.post(`http://localhost:8080/api/v1/transactions/deposit`,{
+            transactionAmount: amount,
+            accountIdFrom: accountNo
+        },{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }})
-        .then((res) => {
-            const data = res.data;
-            if(data)
-            {
-                console.log("yahoo",data);
-                axios.post(`http://localhost:8080/api/v1/deposit`,{
-                    transactionAmount: amount,
-                    accountIdFrom: data
-                },{
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }})
-                .then((res)=>{ 
-                    navigate(`/alltransac`)
-                    console.log("hellllllo",res.data)
-                })
-            }
-           
+        .then((res)=>{ 
+            navigate(`/alltransac`)
+            console.log("hellllllo",res.data)
         })
-        .catch((error) => {
-            if (error.response && error.response.status === 404) {
-               
-               
-            }})
     };   
     return (
      <> 

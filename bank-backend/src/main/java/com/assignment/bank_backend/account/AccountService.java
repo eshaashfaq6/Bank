@@ -45,13 +45,11 @@ public class AccountService {
         }
         return accountRepository.save(account);
     }
-    public Optional<Account> findById(Long accountId) {
-        return accountRepository.findById(accountId);
-    }
     public Optional<Account> findByAccountNo(Long accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber);
     }
     public Optional<Account> findByUserId(Long UserId) {
+
         return accountRepository.findByUserId(UserId);
     }
     public Optional<Account> updateByAccountNo(Long accountNumber, AccountUpdate account) {
@@ -107,7 +105,7 @@ public class AccountService {
         Optional<Account> acc=accountRepository.findByAccountId(accountId);
         return acc.get().getAccountNumber();
     }
-    public Optional<Account> setStatus(Long accountNumber) {
+    public Optional<Account> updateStatus(Long accountNumber) {
         Optional<Account> existing =accountRepository.findByAccountNumber(accountNumber);
 
         if(existing.isPresent())

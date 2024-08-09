@@ -11,7 +11,7 @@ function UpdateAccount() {
     useEffect(() => {
         const token = Cookies.get('token');
         
-        axios.get(`http://localhost:8080/api/v1/accountsByAccountNo/${accountNo}`, {
+        axios.get(`http://localhost:8080/api/v1/accounts/ByaccountNo/${accountNo}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -19,7 +19,10 @@ function UpdateAccount() {
         }).then((res) => {
             setAccData(res.data);
         }).catch((error) => {
-            console.error("Error fetching account data:", error);
+            if(error.response && error.response.status==404)
+            {
+            console.error("Not Found");
+            }
         });
     }, [accountNo]);
     
@@ -80,7 +83,7 @@ function UpdateAccount() {
         validateAccountNumber(accountNumber);
         if (!cnicIsInvalid && !mobileNoIsInvalid && !accountNumberIsInvalid) {
             const token = Cookies.get('token');
-            axios.patch(`http://localhost:8080/api/v1/updateByAccountNo/${accountNo}`, {
+            axios.patch(`http://localhost:8080/api/v1/accounts/${accountNo}`, {
                 accountNumber,
                 description: accountDescription,
                 cnic: CNIC,
@@ -101,7 +104,10 @@ function UpdateAccount() {
                 console.log("Update successful", res.data);
                 navigate("/viewaccount");
             }).catch((error) => {
-                console.error("Update failed", error);
+                if(error.response && error.response==404)
+                {
+                    console.log("No such accout found")
+                }
             });
         }
     };

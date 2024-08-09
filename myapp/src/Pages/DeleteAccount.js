@@ -15,7 +15,7 @@ function DeleteAccount() {
         event.preventDefault();
         console.log("i m here");
         const token = Cookies.get('token');
-        axios.get(`http://localhost:8080/api/v1/accountsByAccountNo/${accountNumber}`,{
+        axios.get(`http://localhost:8080/api/v1/accounts/ByaccountNo/${accountNumber}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
@@ -26,7 +26,7 @@ function DeleteAccount() {
             if(data)
             {
                 console.log(data);
-                axios.post(`http://localhost:8080/api/v1/setstatus/${accountNumber}`,{},{
+                axios.put(`http://localhost:8080/api/v1/accounts/${accountNumber}/status`,{},{
                     headers: {
                       'Content-Type': 'application/json',
                       'Authorization': `Bearer ${token}`

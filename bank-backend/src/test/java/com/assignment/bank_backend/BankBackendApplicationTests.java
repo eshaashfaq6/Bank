@@ -37,7 +37,7 @@ public class BankBackendApplicationTests {
 		// Login request
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult result = mockMvc.perform(post("/api/v1/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -55,7 +55,7 @@ public class BankBackendApplicationTests {
 		// Login request
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult result = mockMvc.perform(post("/api/v1/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -85,7 +85,7 @@ public class BankBackendApplicationTests {
 		// Login request
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -123,7 +123,7 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -150,7 +150,7 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -177,7 +177,7 @@ public class BankBackendApplicationTests {
 	{
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -205,7 +205,7 @@ public class BankBackendApplicationTests {
         // Step 1: Obtain an authentication token (Assuming a login endpoint is available for obtaining a token)
         String loginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 
-        MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginPayload))
                 .andExpect(status().isOk())
@@ -236,7 +236,7 @@ public class BankBackendApplicationTests {
         // Step 1: Obtain an authentication token (Assuming a login endpoint is available for obtaining a token)
         String loginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 
-        MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginPayload))
                 .andExpect(status().isOk())
@@ -263,7 +263,7 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -293,7 +293,7 @@ public class BankBackendApplicationTests {
 	public void testUserLoginAndDebit() throws Exception {
 		// Admin login to get token
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult result = mockMvc.perform(post("/api/v1/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -306,7 +306,7 @@ public class BankBackendApplicationTests {
 		String authToken = JsonPath.read(responseBody, "$.token");
 		// User login to get role
 		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
 				.andExpect(status().isOk())
@@ -329,7 +329,7 @@ public class BankBackendApplicationTests {
 
 		// Debit the account
 		String debitPayload = "{\"transactionAmount\":500,\"accountIdFrom\":3}";
-		MvcResult debitResult = mockMvc.perform(post("/api/v1/debit")
+		MvcResult debitResult = mockMvc.perform(post("/api/v1/transactions/debit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(debitPayload)
 						.header("Authorization", "Bearer " + userAuthToken))
@@ -354,7 +354,7 @@ public class BankBackendApplicationTests {
 	public void testUserLoginAndCredit() throws Exception {
 		// Admin login to get token
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult result = mockMvc.perform(post("/api/v1/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
 				.andExpect(status().isOk())
@@ -369,7 +369,7 @@ public class BankBackendApplicationTests {
 
 		// User login to get role
 		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/lusers/ogin")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
 				.andExpect(status().isOk())
@@ -390,7 +390,7 @@ public class BankBackendApplicationTests {
 				.andExpect(jsonPath("$", Matchers.is("AccountHolder"))) // Ensure this matches the actual role
 				.andReturn();
 		String creditPayload = "{\"transactionAmount\":300,\"accountIdFrom\":3,\"accountIdTo\":2}";
-		MvcResult creditResult = mockMvc.perform(post("/api/v1/credit")
+		MvcResult creditResult = mockMvc.perform(post("/api/v1/transactions/credit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(creditPayload)
 						.header("Authorization", "Bearer " + userAuthToken))
@@ -411,7 +411,7 @@ public class BankBackendApplicationTests {
 	public void testGetBalanceAfterCredit() throws Exception
 	{
 		String userLoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
 				.andExpect(status().isOk())
@@ -435,7 +435,7 @@ public class BankBackendApplicationTests {
 	public void testDepositandThenGetBalance() throws Exception
 	{
 		String adminLoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult adminResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult adminResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(adminLoginPayload))
 				.andExpect(status().isOk())
@@ -447,7 +447,7 @@ public class BankBackendApplicationTests {
 		String adminResponseBody = adminResult.getResponse().getContentAsString();
 		String adminAuthToken = JsonPath.read(adminResponseBody, "$.token");
 		String depositPayload = "{\"transactionAmount\":10000,\"accountIdFrom\":3}";
-		MvcResult depositResult = mockMvc.perform(post("/api/v1/deposit")
+		MvcResult depositResult = mockMvc.perform(post("/api/v1/transactions//deposit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(depositPayload)
 						.header("Authorization", "Bearer " + adminAuthToken))
@@ -455,7 +455,7 @@ public class BankBackendApplicationTests {
 				.andReturn();
 
 		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
 				.andExpect(status().isOk())
@@ -478,7 +478,7 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetTransactions() throws Exception
 	{String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
 				.andExpect(status().isOk())
@@ -502,7 +502,7 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetAccountIdByAccountNumber() throws Exception{
 	String adminLoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-	MvcResult adminResult = mockMvc.perform(post("/api/v1/login")
+	MvcResult adminResult = mockMvc.perform(post("/api/v1/users/users/login")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(adminLoginPayload))
 			.andExpect(status().isOk())
@@ -526,7 +526,7 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetAccountNumberByAccountId() throws Exception{
 		String adminLoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult adminResult = mockMvc.perform(post("/api/v1/login")
+		MvcResult adminResult = mockMvc.perform(post("/api/v1/users/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(adminLoginPayload))
 				.andExpect(status().isOk())

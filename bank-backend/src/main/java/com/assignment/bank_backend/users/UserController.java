@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -29,40 +30,20 @@ public class UserController {
         this.userService = Objects.requireNonNull(userService,"Account Service must not be null");
     }
     @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/getusers")
+    @GetMapping("/api/v1/users")
     public ResponseEntity<List<User>> get (@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "1000") Integer size) {
         return ResponseEntity.ok(userService.findAll(page,size));
     }
-    @GetMapping("/api/v1/getrole/{email}")
-    public String getrole (@PathVariable("email") String email) {
-        String role=userService.getrole(email);
-        return role;
-    }
-@PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/getuserId/{email}")
-    public Long getUserId (@PathVariable("email") String email) {
-        Long userid=userService.getUserID(email);
-        return userid;
-    }
-
     @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
-    @GetMapping("/api/v1/getUserByEmail/{userEmail}")
-    public ResponseEntity<User> get(@PathVariable("userEmail") String userEmail) {
+    @GetMapping("/api/v1/users/profile")
+    public ResponseEntity<User> get() {
+        String userEmail=  SecurityContextHolder.getContext().getAuthentication().getName();;
         Optional<User> userr =userService.findByEmail(userEmail);
         if (userr.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userr.get());
-    }
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/getUserByUserId/{userId}")
-    public ResponseEntity<User> get(@PathVariable("userId") Long userId) {
-        Optional<User> user =userService.findById(userId);
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(user.get());
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PostMapping("/api/v1/users")
@@ -76,7 +57,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }}
 
-    @PostMapping("/api/v1/login")
+    @PostMapping("/api/v1/users/login")
     public ResponseEntity<?> authenticate(@RequestBody Login login) {
           try{
               User authenticatedUser = authenticationService.authenticate(login);

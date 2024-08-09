@@ -31,24 +31,13 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/getaccounts")
+    @GetMapping("/api/v1/accounts")
     public ResponseEntity<List<Account>> get (@RequestParam(name = "page", defaultValue = "0") Integer page,
                                            @RequestParam(name = "size", defaultValue = "1000") Integer size) {
         return ResponseEntity.ok(accountService.findAll(page,size));
     }
-
     @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/accounts/{accountId}")
-    public ResponseEntity<Account> get(@PathVariable("accountId") Long accountId) {
-        Optional<Account> acc =accountService.findById(accountId);
-        if (acc.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(acc.get());
-    }
-
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/accountsByAccountNo/{accountNumber}")
+    @GetMapping("/api/v1/accounts/ByaccountNo/{accountNumber}")
     public ResponseEntity<Account> getByAccountNo(@PathVariable("accountNumber") Long accountNumber) {
         Optional<Account> acc =accountService.findByAccountNo(accountNumber);
         if (acc.isEmpty()) {
@@ -56,18 +45,9 @@ public class AccountController {
         }
         return ResponseEntity.ok(acc.get());
     }
-    @PreAuthorize("hasAnyAuthority('admin')")
-    @GetMapping("/api/v1/accountsByUserId/{UserId}")
-    public ResponseEntity<Account> getccountsByUserId(@PathVariable("UserId") Long UserId) {
-        Optional<Account> acc =accountService.findByUserId(UserId);
-        if (acc.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(acc.get());
-    }
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/accountsByUserIdd")
-    public ResponseEntity<Account> getccountByUserIdUser() {
+    @PreAuthorize("hasAnyAuthority('AccountHolder','admin')")
+    @GetMapping("/api/v1/users/profile/accounts")
+    public ResponseEntity<Account> getAccountByUserId() {
         String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> u=userService.findByEmail(UserEmail);
         Optional<Account> acc =accountService.findByUserId(u.get().getUserId());
@@ -77,7 +57,7 @@ public class AccountController {
         return ResponseEntity.ok(acc.get());
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder','admin')")
-    @GetMapping("/api/v1/getAccountNo/{accountId}")
+    @GetMapping("/api/v1/accounts/{accountId}/accountNo")
     public Long getaccountNo(@PathVariable("accountId") Long accountId) {
         Long No =accountService.findAccountNo(accountId);
         return No;
@@ -96,7 +76,7 @@ public class AccountController {
         }
     }
     @PreAuthorize("hasAnyAuthority('admin')")
-    @PatchMapping("/api/v1/updateByAccountNo/{accountNumber}")
+    @PatchMapping("/api/v1/accounts/{accountNumber}")
     public ResponseEntity<Account> updateByAccountNumber(@PathVariable("accountNumber") Long accountNumber, @RequestBody AccountUpdate account) {
         Optional<Account> saved = accountService.updateByAccountNo(accountNumber, account);
         if (saved.isEmpty()) {
@@ -105,16 +85,16 @@ public class AccountController {
         return ResponseEntity.ok(saved.get());
     }
     @PreAuthorize("hasAnyAuthority('admin')")
-    @PostMapping("/api/v1/setstatus/{accountNo}")
-    public ResponseEntity<Account> setStatus(@PathVariable("accountNo") Long accountNo) {
-        Optional<Account> acc=accountService.setStatus(accountNo);
+    @PutMapping("/api/v1/accounts/{accountNo}/status")
+    public ResponseEntity<Account> UpdateStatus(@PathVariable("accountNo") Long accountNo) {
+        Optional<Account> acc=accountService.updateStatus(accountNo);
         if (acc.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(acc.get());
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder','admin')")
-    @GetMapping("/api/v1/getAccountId/{accountNumber}")
+    @GetMapping("/api/v1/accounts/{accountNumber}/accountId")
     public ResponseEntity<?> getAccountId(@PathVariable("accountNumber") Long accountNumber) {
         Optional<Account> acc =accountService.findByAccountNo(accountNumber);
         if (acc.isEmpty()) {
@@ -123,7 +103,7 @@ public class AccountController {
         return ResponseEntity.ok(acc.get().getAccountId());
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/getBalance")
+    @GetMapping("/api/v1/accounts/balance")
     public Long getbalance() {
         String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> u=userService.findByEmail(UserEmail);
@@ -134,25 +114,15 @@ public class AccountController {
         return balance;
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/getAccountNoOfLoginUser")
-    public Long getAccountNoOfLoginUser() {
-        String UserEmail =  SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> u=userService.findByEmail(UserEmail);
-        Optional<Account> acc =accountService.findByUserId(u.get().getUserId());
-        return acc.get().getAccountNumber();
-    }
-    @PreAuthorize("hasAnyAuthority('AccountHolder')")
-      @PostMapping("/api/v1/accountLogin")
+      @PostMapping("/api/v1/accounts/Login")
       public ResponseEntity<AccountLoginResponse> accountLogin(@RequestBody AccountLogin account) {
       AccountLoginResponse res =accountService.loginAccount(account);
       return ResponseEntity.ok(res);
 
     }
     @PreAuthorize("hasAnyAuthority('AccountHolder')")
-    @GetMapping("/api/v1/getstatus/{AccountNo}")
+    @GetMapping("/api/v1/accounts/{AccountNo}/status")
     public String getStatus (@PathVariable Long AccountNo) {
         return accountService.getstatus(AccountNo);
     }
-
-
 }

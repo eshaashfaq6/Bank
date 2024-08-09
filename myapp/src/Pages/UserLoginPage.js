@@ -22,7 +22,7 @@ function UserLoginPage() {
         event.preventDefault();
         
         const hashedPassword = CryptoJS.SHA256(password).toString();
-        let user=axios.post("http://localhost:8080/api/v1/login", {
+        let user=axios.post("http://localhost:8080/api/v1/users/login", {
             useremail: email,
             password: hashedPassword,
         })

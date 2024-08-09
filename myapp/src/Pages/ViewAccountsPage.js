@@ -54,7 +54,7 @@ const ViewAccounts = () => {
     setloader(true);
     
     const token = Cookies.get('token');
-    axios.get('http://localhost:8080/api/v1/getaccounts', {
+    axios.get('http://localhost:8080/api/v1/accounts', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -70,7 +70,7 @@ const ViewAccounts = () => {
 
   const handleDelete = (accountNumber) => {
     const token = Cookies.get('token');
-    axios.post(`http://localhost:8080/api/v1/setstatus/${accountNumber}`,{},{
+    axios.put(`http://localhost:8080/api/v1/accounts/${accountNumber}/status`,{},{
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`

@@ -33,21 +33,21 @@ function Credit()
             const token = Cookies.get('token');
             
             try {
-                const accountNoResponse = await axios.get('http://localhost:8080/api/v1/getAccountNoOfLoginUser', {
+                const accountNoResponse = await axios.get('http://localhost:8080/api/v1/users/profile/accounts', {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     }
                 });
         
-                const accountNo = accountNoResponse.data;
+                const accountNo = accountNoResponse.data.accountNumber;
                 if (recieverAccountNo == accountNo) {
                     setcheckRecieverAmountNo(false);
                     setstatus(false);
                     setTransferToSelf(true);
                     return;
                 }
-                const recieverIdResponse = await axios.get(`http://localhost:8080/api/v1/getAccountId/${recieverAccountNo}`, {
+                const recieverIdResponse = await axios.get(`http://localhost:8080/api/v1/accounts/${recieverAccountNo}/accountId`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ function Credit()
         
                 const recieverId = recieverIdResponse.data;
                 if (recieverId) {
-                    const statusResponse = await axios.get(`http://localhost:8080/api/v1/getstatus/${recieverAccountNo}`, {
+                    const statusResponse = await axios.get(`http://localhost:8080/api/v1/accounts/${recieverAccountNo}/status`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
@@ -64,7 +64,7 @@ function Credit()
                     });
         
                     if (statusResponse.data === "active") {
-                        const creditResponse = await axios.post('http://localhost:8080/api/v1/credit', {
+                        const creditResponse = await axios.post('http://localhost:8080/api/v1/transactions/credit', {
                             transactionAmount: amount,
                             accountIdTo: recieverId,
                         }, {

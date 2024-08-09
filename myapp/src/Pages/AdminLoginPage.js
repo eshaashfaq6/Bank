@@ -20,7 +20,7 @@ function AdminLoginPage() {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("i m here");
-        axios.post("http://localhost:8080/api/v1/login", {
+        axios.post("http://localhost:8080/api/v1/users/login", {
             useremail: email,
             password: password,
         })

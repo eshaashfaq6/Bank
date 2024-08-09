@@ -17,7 +17,7 @@ function CashWithdrawl() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const token = Cookies.get('token');
-        axios.post(`http://localhost:8080/api/v1/debit`, {
+        axios.post(`http://localhost:8080/api/v1/transactions/debit`, {
             transactionDescription: "Debit Transaction",
             transactionAmount: amount
         }, {
