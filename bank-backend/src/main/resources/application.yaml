@@ -2,7 +2,7 @@ spring:
   application:
     name: bank-backend
   datasource:
-    url: ${dbUrl}
+    url: ${dbUrls}
     username: ${dbUser}
     password: ${dbPassword}
     driver-class-name: com.mysql.cj.jdbc.Driver

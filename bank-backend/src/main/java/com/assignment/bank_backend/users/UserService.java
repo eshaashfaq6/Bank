@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.assignment.bank_backend.account.AccountRepository;
 import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.AuthorityUtils;

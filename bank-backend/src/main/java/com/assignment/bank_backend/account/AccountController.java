@@ -67,7 +67,7 @@ public class AccountController {
     public ResponseEntity<?> create(@RequestBody Account account) {
         try {
             account = accountService.create(account);
-            return ResponseEntity.created(URI.create("/api/v1/Accounts/" + account.getAccountId())).body(account);
+            return ResponseEntity.created(URI.create("/api/v1/Accounts/" )).body(account);
         } catch (CnicAlreadyExistsException e) {
             return ResponseEntity.notFound().build();
         } catch (AccountNumberAlreadyExistsException e)
@@ -86,7 +86,7 @@ public class AccountController {
     }
     @PreAuthorize("hasAnyAuthority('admin')")
     @PutMapping("/api/v1/accounts/{accountNo}/status")
-    public ResponseEntity<Account> UpdateStatus(@PathVariable("accountNo") Long accountNo) {
+    public ResponseEntity<Account> updateStatus(@PathVariable("accountNo") Long accountNo) {
         Optional<Account> acc=accountService.updateStatus(accountNo);
         if (acc.isEmpty()) {
             return ResponseEntity.notFound().build();

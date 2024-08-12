@@ -3,7 +3,6 @@ package com.assignment.bank_backend.users;
 import com.assignment.bank_backend.exception.AuthenticationException;
 import com.assignment.bank_backend.exception.EmailAlreadyExistsException;
 import com.assignment.bank_backend.login.Login;
-import com.assignment.bank_backend.response.LoginResponse;
 import com.assignment.bank_backend.services.AuthenticationService;
 import com.assignment.bank_backend.services.JwtService;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +37,7 @@ public class UserController {
     @PreAuthorize("hasAnyAuthority('admin','AccountHolder')")
     @GetMapping("/api/v1/users/profile")
     public ResponseEntity<User> get() {
-        String userEmail=  SecurityContextHolder.getContext().getAuthentication().getName();;
+        String userEmail=  SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> userr =userService.findByEmail(userEmail);
         if (userr.isEmpty()) {
             return ResponseEntity.notFound().build();

@@ -1,7 +1,6 @@
 package com.assignment.bank_backend.transaction;
 
 import com.assignment.bank_backend.account.Account;
-import com.assignment.bank_backend.account.AccountRepository;
 import com.assignment.bank_backend.account.AccountService;
 import com.assignment.bank_backend.users.User;
 import com.assignment.bank_backend.users.UserService;

@@ -40,14 +40,11 @@ public class BankBackendApplicationTests {
 		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = result.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String responseBody = result.getResponse().getHeader("Authorization");
 	}
 	@Order(1)
 	@Test
@@ -58,24 +55,32 @@ public class BankBackendApplicationTests {
 		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = result.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 
 		// Perform POST request to add news with authenticated token
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
 						.content("{\"username\":\"unitTest\",\"useremail\":\"unitTest@gmail.com\",\"useraddress\":\"shadbagh\",\"password\":\"unitTest@123\"}")
-						.header("Authorization", "Bearer " + authToken))
+						.header("Authorization",  authToken))
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.useremail", Matchers.is("unitTest@gmail.com")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.useraddress", Matchers.is("shadbagh")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/users")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.content("{\"username\":\"amna\",\"useremail\":\"amna@gmail.com\",\"useraddress\":\"shadbagh\",\"password\":\"Amna@123\"}")
+						.header("Authorization",  authToken))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.useremail", Matchers.is("amna@gmail.com")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.useraddress", Matchers.is("shadbagh")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.createdAt", Matchers.notNullValue()));
 	}
@@ -85,35 +90,51 @@ public class BankBackendApplicationTests {
 		// Login request
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = loginResult.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 
 		// Create account request payload
-		String accountPayload = "{\"accountNumber\":1234,\"description\":\"Savings Account\",\"cnic\":1234567890123,\"mobileNo\":12345678912,\"accountType\":\"Savings\",\"balance\":1000,\"pin\":1234,\"userId\":4,\"status\":\"active\"}";
+		String accountPayload = "{\"accountNumber\":1234,\"description\":\"Savings Account\",\"cnic\":1234567890123,\"mobileNo\":12345678912,\"accountType\":\"Savings\",\"balance\":1000,\"pin\":1234,\"userId\":2,\"status\":\"active\"}";
 
 		// Perform POST request to create account with authenticated token
 		mockMvc.perform(post("/api/v1/accounts")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(accountPayload)
-						.header("Authorization", "Bearer " + authToken))
+						.header("Authorization",authToken))
 				.andDo(print())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isCreated())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.accountId", Matchers.notNullValue()))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber", Matchers.is(1234)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("Savings Account")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.accountType", Matchers.is("Savings")))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.balance", Matchers.is(1000)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.pin", Matchers.is(1234)))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is(4)));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is(2)));
+
+
+// Create account request payload
+		String accountPayloadd = "{\"accountNumber\":12345,\"description\":\"Savings Account\",\"cnic\":1234567860123,\"mobileNo\":12345678912,\"accountType\":\"Savings\",\"balance\":1000,\"pin\":1234,\"userId\":3,\"status\":\"active\"}";
+
+		// Perform POST request to create account with authenticated token
+		mockMvc.perform(post("/api/v1/accounts")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(accountPayloadd)
+						.header("Authorization",authToken))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.accountId", Matchers.notNullValue()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber", Matchers.is(12345)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.description", Matchers.is("Savings Account")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.accountType", Matchers.is("Savings")))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.balance", Matchers.is(1000)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.pin", Matchers.is(1234)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is(3)));
 	}
 
 
@@ -123,26 +144,23 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = loginResult.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getaccounts")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + authToken)
+						.header("Authorization", authToken)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
 	}
 	@Order(4)
 	@Test
@@ -150,26 +168,24 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = loginResult.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getusers")
+		String authToken = result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + authToken)
+						.header("Authorization",  authToken)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(4)));
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
 	}
 	@Order(8)
 	@Test
@@ -177,23 +193,20 @@ public class BankBackendApplicationTests {
 	{
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = loginResult.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 		String accountPayload = "{\"description\":\"Updated Description\"}";
 
-		mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/updateByAccountNo/{accountNumber}", 1234567890)
+		mockMvc.perform(MockMvcRequestBuilders.patch("/api/v1/accounts/{accountNumber}", 1234)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(accountPayload)
-						.header("Authorization", "Bearer " + authToken))
+						.header("Authorization", authToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.description", Matchers.is("Updated Description")));
@@ -205,25 +218,22 @@ public class BankBackendApplicationTests {
         // Step 1: Obtain an authentication token (Assuming a login endpoint is available for obtaining a token)
         String loginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 
-        MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+        MvcResult result = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginPayload))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.expiresIn").isNumber())
+                .andExpect(status().isAccepted())
                 .andDo(print())
                 .andReturn();
 
-        String responseBody = loginResult.getResponse().getContentAsString();
-        String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 
         // Step 2: Perform the account login request
         String accountLoginPayload = "{\"accountNo\":1234,\"pin\":1234}";
 
-        MvcResult accountLoginResult = mockMvc.perform(post("/api/v1/accountLogin")
+        MvcResult accountLoginResult = mockMvc.perform(post("/api/v1/accounts/Login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(accountLoginPayload)
-                        .header("Authorization", "Bearer " + authToken))
+                        .header("Authorization", authToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", Matchers.is("Login success"))) // Adjust according to actual response
@@ -239,19 +249,16 @@ public class BankBackendApplicationTests {
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(loginPayload))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.expiresIn").isNumber())
+                .andExpect(status().isAccepted())
                 .andDo(print())
                 .andReturn();
 
-        String responseBody = loginResult.getResponse().getContentAsString();
-        String authToken = JsonPath.read(responseBody, "$.token");
+        String authToken = loginResult.getResponse().getHeader("Authorization");
 
 
-        MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
+        MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/balance")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + authToken))
+                        .header("Authorization", authToken))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.is(1000))) // Replace with the expected balance
@@ -263,28 +270,25 @@ public class BankBackendApplicationTests {
 
 		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
 
-		MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = loginResult.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
+		String authToken = result.getResponse().getHeader("Authorization");
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accountsByAccountNo/{accountNumber}", 1234567890)
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/ByaccountNo/{accountNumber}", 1234)
 						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + authToken))
+						.header("Authorization", authToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(jsonPath("$.accountId", Matchers.is(1)))
-				.andExpect(jsonPath("$.description", Matchers.is("this is student base account")))
-				.andExpect(jsonPath("$.accountType", Matchers.is("student account")))
-				.andExpect(jsonPath("$.balance", Matchers.is(5000)))
+				.andExpect(jsonPath("$.description", Matchers.is("Savings Account")))
+				.andExpect(jsonPath("$.accountType", Matchers.is("Savings")))
+				.andExpect(jsonPath("$.balance", Matchers.is(1000)))
 				.andExpect(jsonPath("$.pin", Matchers.notNullValue()))
 				.andExpect(jsonPath("$.userId",Matchers.is(2)));
 	}
@@ -296,52 +300,35 @@ public class BankBackendApplicationTests {
 		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String responseBody = result.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
-		// User login to get role
+		String authToken = result.getResponse().getHeader("Authorization");
 		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-
-		// Get role for the user
-		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "unitTest@gmail.com")
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", Matchers.is("AccountHolder"))) // Ensure this matches the actual role
-				.andReturn();
-
+		String userAuthToken = userResult.getResponse().getHeader("Authorization");
 		// Debit the account
-		String debitPayload = "{\"transactionAmount\":500,\"accountIdFrom\":3}";
+		String debitPayload = "{\"transactionAmount\":500,\"accountIdFrom\":1}";
 		MvcResult debitResult = mockMvc.perform(post("/api/v1/transactions/debit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(debitPayload)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization", userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())  // Change to 200 if that is what your API should return
 				.andExpect(jsonPath("$", Matchers.is("Transaction Success")))
 				.andReturn();
 
 		// Get the balance of the account
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/balance")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization",  userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("500"))
@@ -352,55 +339,29 @@ public class BankBackendApplicationTests {
 	@Order(11)
 	@Test
 	public void testUserLoginAndCredit() throws Exception {
-		// Admin login to get token
-		String loginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult result = mockMvc.perform(post("/api/v1/users/login")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(loginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
-				.andDo(print())
-				.andReturn();
-
-		String responseBody = result.getResponse().getContentAsString();
-		String authToken = JsonPath.read(responseBody, "$.token");
-
-
-		// User login to get role
 		String userLoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
-		MvcResult userResult = mockMvc.perform(post("/api/v1/lusers/ogin")
+		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
+		String userAuthToken = userResult.getResponse().getHeader("Authorization");
 
-		// Get role for the user
-		MvcResult getRoleResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getrole/{email}", "unitTest@gmail.com")
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
-				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", Matchers.is("AccountHolder"))) // Ensure this matches the actual role
-				.andReturn();
-		String creditPayload = "{\"transactionAmount\":300,\"accountIdFrom\":3,\"accountIdTo\":2}";
+
+		String creditPayload = "{\"transactionAmount\":300,\"accountIdFrom\":1,\"accountIdTo\":2}";
 		MvcResult creditResult = mockMvc.perform(post("/api/v1/transactions/credit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(creditPayload)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization", userAuthToken))
 				.andDo(print())
 				.andExpect(jsonPath("$", Matchers.is("Transaction Success")))
 
 				.andReturn();
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/balance")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization", userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", Matchers.is(200))) // Replace with the expected balance
@@ -410,24 +371,20 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetBalanceAfterCredit() throws Exception
 	{
-		String userLoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"admin123\"}";
+		String userLoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"Amna@123\"}";
 		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
-
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
+		String userAuthToken = userResult.getResponse().getHeader("Authorization");
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/balance")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization", userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", Matchers.is(5300))) // Replace with the expected balance
+				.andExpect(jsonPath("$", Matchers.is(1300))) // Replace with the expected balance
 				.andReturn();
 	}
 	@Order(13)
@@ -438,19 +395,16 @@ public class BankBackendApplicationTests {
 		MvcResult adminResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(adminLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String adminResponseBody = adminResult.getResponse().getContentAsString();
-		String adminAuthToken = JsonPath.read(adminResponseBody, "$.token");
-		String depositPayload = "{\"transactionAmount\":10000,\"accountIdFrom\":3}";
-		MvcResult depositResult = mockMvc.perform(post("/api/v1/transactions//deposit")
+		String adminAuthToken = adminResult.getResponse().getHeader("Authorization");
+		String depositPayload = "{\"transactionAmount\":10000,\"accountIdFrom\":1234}";
+		MvcResult depositResult = mockMvc.perform(post("/api/v1/transactions/deposit")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(depositPayload)
-						.header("Authorization", "Bearer " + adminAuthToken))
+						.header("Authorization", adminAuthToken))
 				.andDo(print())
 				.andReturn();
 
@@ -458,17 +412,14 @@ public class BankBackendApplicationTests {
 		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getBalance")
+		String userAuthToken = userResult.getResponse().getHeader("Authorization");
+		MvcResult getBalanceResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/balance")
 						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", "Bearer " + userAuthToken))
+						.header("Authorization",  userAuthToken))
 				.andDo(print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", Matchers.is(10200))) // Replace with the expected balance
@@ -481,16 +432,13 @@ public class BankBackendApplicationTests {
 		MvcResult userResult = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(userLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
-		String userResponseBody = userResult.getResponse().getContentAsString();
-		String userAuthToken = JsonPath.read(userResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/transactionsByAccountId")
+		String userAuthToken = userResult.getResponse().getHeader("Authorization");
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/profile/transactions")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + userAuthToken)
+						.header("Authorization", userAuthToken)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -502,20 +450,16 @@ public class BankBackendApplicationTests {
 	@Test
 	public void testGetAccountIdByAccountNumber() throws Exception{
 	String adminLoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-	MvcResult adminResult = mockMvc.perform(post("/api/v1/users/users/login")
+	MvcResult adminResult = mockMvc.perform(post("/api/v1/users/login")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(adminLoginPayload))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.token").isNotEmpty())
-			.andExpect(jsonPath("$.expiresIn").isNumber())
+			.andExpect(status().isAccepted())
 			.andDo(print())
 			.andReturn();
-
-	String adminResponseBody = adminResult.getResponse().getContentAsString();
-	String adminAuthToken = JsonPath.read(adminResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAccountId/{accountNumber}",1234567890)
+		String adminAuthToken = adminResult.getResponse().getHeader("Authorization");
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/{accountNumber}/accountId",1234)
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + adminAuthToken)
+						.header("Authorization",  adminAuthToken)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -524,37 +468,116 @@ public class BankBackendApplicationTests {
 	}
 	@Order(17)
 	@Test
-	public void testGetAccountNumberByAccountId() throws Exception{
-		String adminLoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
-		MvcResult adminResult = mockMvc.perform(post("/api/v1/users/users/login")
+	public void testGetAccountOfLoginUser() throws Exception{
+		String LoginPayload = "{\"useremail\":\"unitTest@gmail.com\",\"password\":\"unitTest@123\"}";
+		MvcResult Result = mockMvc.perform(post("/api/v1/users/login")
 						.contentType(MediaType.APPLICATION_JSON)
-						.content(adminLoginPayload))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token").isNotEmpty())
-				.andExpect(jsonPath("$.expiresIn").isNumber())
+						.content(LoginPayload))
+				.andExpect(status().isAccepted())
 				.andDo(print())
 				.andReturn();
 
-		String adminResponseBody = adminResult.getResponse().getContentAsString();
-		String adminAuthToken = JsonPath.read(adminResponseBody, "$.token");
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAccountNo/{accountNumber}",1)
+		String AuthToken = Result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/profile/accounts")
 						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + adminAuthToken)
+						.header("Authorization",  AuthToken)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.is(1234567890)));
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accountsByUserId/{UserId}",2)
-						.contentType(MediaType.APPLICATION_JSON_VALUE)
-						.header("Authorization", "Bearer " + adminAuthToken)
-				)
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber", Matchers.is(1234567890)))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.accountNumber", Matchers.is(1234)))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.accountId", Matchers.is(1)));
 
 
+	}
+	@Order(18)
+	@Test
+	public void testGetStatus() throws Exception{
+		String LoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"Amna@123\"}";
+		MvcResult Result = mockMvc.perform(post("/api/v1/users/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(LoginPayload))
+				.andExpect(status().isAccepted())
+				.andDo(print())
+				.andReturn();
+
+		String AuthToken = Result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/{AccountNo}/status",1234)
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.header("Authorization",  AuthToken)
+				)
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.is("active")));
+
+
+	}
+	@Order(19)
+	@Test
+	public void testUpdateStatus() throws Exception{
+		String LoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
+		MvcResult Result = mockMvc.perform(post("/api/v1/users/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(LoginPayload))
+				.andExpect(status().isAccepted())
+				.andDo(print())
+				.andReturn();
+
+		String AuthToken = Result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/accounts/{accountNo}/status",1234)
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.header("Authorization",  AuthToken)
+				)
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is("Inactive")));
+
+
+	}
+	@Order(20)
+	@Test
+	public void testGetAccountNumberById() throws Exception{
+		String LoginPayload = "{\"useremail\":\"admin@gmail.com\",\"password\":\"admin123\"}";
+		MvcResult Result = mockMvc.perform(post("/api/v1/users/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(LoginPayload))
+				.andExpect(status().isAccepted())
+				.andDo(print())
+				.andReturn();
+
+		String AuthToken = Result.getResponse().getHeader("Authorization");
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/accounts/{accountId}/accountNo",1)
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.header("Authorization",  AuthToken)
+				)
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.is(1234)));
+
+
+	}
+	@Order(21)
+	@Test
+	public void testGetDetailsOfLoginedUser() throws Exception{
+		String LoginPayload = "{\"useremail\":\"amna@gmail.com\",\"password\":\"Amna@123\"}";
+		MvcResult Result = mockMvc.perform(post("/api/v1/users/login")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(LoginPayload))
+				.andExpect(status().isAccepted())
+				.andDo(print())
+				.andReturn();
+		String AuthToken = Result.getResponse().getHeader("Authorization");
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/profile")
+						.contentType(MediaType.APPLICATION_JSON_VALUE)
+						.header("Authorization",  AuthToken)
+				)
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is(3)));
 	}
 }
